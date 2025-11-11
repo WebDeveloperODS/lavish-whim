@@ -1,0 +1,9 @@
+[
+      {
+            "product_id":"1",
+            "category": "bag",
+            "title":"Women's Fashion Handbag",
+            "price":"3,099",
+            "images":["/images/womens-fashion-handbag-1.png","/images/womens-fashion-handbag-2.jpg","/images/womens-fashion-handbag-3.jpg"]
+      }
+]
