@@ -23,10 +23,18 @@ body{
   margin-inline:auto;
 }
 
-@media (min-width: 1300px) AND (max-width: 1700px) {
+@media (min-width: 1000px) AND (max-width: 1700px) {
     .container{
       max-width: 85vw;
       width: 100%;
       margin-inline:auto;
     }
+}
+
+@media (max-width: 999px) {
+  .container{
+    max-width: 92vw;
+    width: 100%;
+    margin-inline:auto;
+  }
 }

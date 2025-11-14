@@ -2,7 +2,7 @@ import React from 'react'
 
 const SectionHead1 = ({children, className}) => {
   return (
-      <h2 className={`text-3xl ${className}`}>
+      <h2 className={`text-2xl lg:text-3xl ${className}`}>
         {children}
       </h2>
   )

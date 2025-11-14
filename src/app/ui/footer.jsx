@@ -47,14 +47,14 @@ const Footer = () => {
   ]
   return (
     <div className='border-t border-neutral-200 pt-10 mt-20' >
-      <div className='container flex flex-col'>
-        <div className='grid grid-cols-[35%_20%_20%_20%] gap-8 w-full pb-10'>
+      <div className='lg:container flex flex-col'>
+        <div className='grid grid-cols-1 lg:grid-cols-[35%_20%_20%_20%] gap-5 lg:gap-8 w-full pb-10'>
           <div className='flex flex-col p-4 gap-5'>
             <div className='flex flex-col'>
               <h3 className='text-lg capitalize font-bold tracking-wide leading-tight '>Let's get in touch</h3>
-              <div className='w-10 border rounded-full border-red-600'/>
+              <div className='w-8 lg:w-10 border rounded-full border-red-600'/>
             </div>  
-            <h4 className='text-md tracking-wide'>{`Discover Timeless Elegance in Handcrafted Jewellery & Luxury Bags – Exclusively Designed for the Modern Woman. Yours Forever.`}</h4>
+            <h4 className='text-sm lg:text-md tracking-wide'>{`Discover Timeless Elegance in Handcrafted Jewellery & Luxury Bags – Exclusively Designed for the Modern Woman. Yours Forever.`}</h4>
             <form>
               <div className='relative flex items-center gap-2 py-2 px-4 border rounded-xl border-neutral-400'>
                 <PiEnvelopeSimpleFill className='h-6 w-auto'/>
@@ -68,7 +68,7 @@ const Footer = () => {
           <div className='flex flex-col p-4 gap-5'>
             <div className='flex flex-col'>
               <h3 className='text-lg capitalize font-bold tracking-wide leading-tight '>Best selling</h3>
-              <div className='w-10 border rounded-full border-red-600'/>
+              <div className='w-8 lg:w-10 border rounded-full border-red-600'/>
             </div>  
             <div className='flex flex-col gap-4'>
               {
@@ -79,7 +79,7 @@ const Footer = () => {
           <div className='flex flex-col p-4 gap-5'>
             <div className='flex flex-col'>
               <h3 className='text-lg capitalize font-bold tracking-wide leading-tight '>Quick links</h3>
-              <div className='w-10 border rounded-full border-red-600'/>
+              <div className='w-8 lg:w-10 border rounded-full border-red-600'/>
             </div>
             <div className='flex flex-col gap-4'>
               {
@@ -90,25 +90,25 @@ const Footer = () => {
           <div className='flex flex-col p-4 gap-5'>
             <div className='flex flex-col'>
               <h3 className='text-lg capitalize font-bold tracking-wide leading-tight '>Customer Support</h3>
-              <div className='w-10 border rounded-full border-red-600'/>
+              <div className='w-8 lg:w-10 border rounded-full border-red-600'/>
             </div>  
             <div className='flex flex-col gap-4'>
-              <div className='grid grid-cols-[15%_85%] gap-3 hover:scale-[1.03]'>
-                <PiPhoneCallDuotone className='p-1 border-[3px] rounded-full bg-black text-white border-neutral-400 w-full h-full border hover:scale-[1.04] cursor-pointer'/>
+              <div className='flex items-center lg:grid lg:grid-cols-[15%_85%] gap-3 hover:scale-[1.03]'>
+                <PiPhoneCallDuotone className='p-1 border-[3px] rounded-full bg-black text-white border-neutral-400 w-10 lg:w-full h-auto lg:h-full border hover:scale-[1.04] cursor-pointer'/>
                 <div className='flex flex-col'>
                   <h5 className='text-xs font-extrabold uppercase text-red-700'>Call us at</h5>
                   <h4 className='text-sm hover:underline cursor-pointer'>(+92) 327 4952566</h4>
                 </div>
               </div>
-              <div className='grid grid-cols-[15%_85%] gap-3 hover:scale-[1.03]'>
-                <PiEnvelopeDuotone className='p-1 border-[3px] rounded-full bg-black text-white border-neutral-400 w-full h-full border hover:scale-[1.04] cursor-pointer'/>
+              <div className='flex items-center lg:grid lg:grid-cols-[15%_85%] gap-3 hover:scale-[1.03]'>
+                <PiEnvelopeDuotone className='p-1 border-[3px] rounded-full bg-black text-white border-neutral-400 w-10 lg:w-full h-auto lg:h-full border hover:scale-[1.04] cursor-pointer'/>
                 <div className='flex flex-col'>
                   <h5 className='text-xs font-extrabold uppercase text-red-700'>E-Mail us at</h5>
                   <h4 className='text-sm hover:underline cursor-pointer'>lavishwhim@gmail.com</h4>
                 </div>
               </div>
-              <div className='grid grid-cols-[15%_85%] gap-3 hover:scale-[1.03]'>
-                <TbMapPin className='p-1 border-[3px] rounded-full bg-black text-white border-neutral-400 w-full h-full border hover:scale-[1.04] cursor-pointer'/>
+              <div className='flex items-center lg:grid lg:grid-cols-[15%_85%] gap-3 hover:scale-[1.03]'>
+                <TbMapPin className='p-1 border-[3px] rounded-full bg-black text-white border-neutral-400 w-10 lg:w-full h-auto lg:h-full border hover:scale-[1.04] cursor-pointer'/>
                 <div className='flex flex-col'>
                   <h5 className='text-xs font-extrabold uppercase text-red-700'>Located at</h5>
                   <h4 className='text-sm hover:underline cursor-pointer'>Lahore, Punjab, PK - 54000</h4>
@@ -125,8 +125,8 @@ const Footer = () => {
             </div>
           </div>  
         </div>
-        <div className='flex border-t border-neutral-500 justify-between items-center py-2'>
-          <h5 className='text-sm'>© 2025 Lavish Whim. All rights reserved. - Developed by <a href='https://off-desks.com' target='_black' rel='noopener noreferrer' className='font-bold hover:underline cursor-pointer'>Off Desks</a></h5>
+        <div className='flex border-t border-neutral-500 justify-center items-center py-2'>
+          <h5 className='text-xs lg:text-sm'>© 2025 Lavish Whim. All rights reserved. - Developed by <a href='https://off-desks.com' target='_black' rel='noopener noreferrer' className='font-bold hover:underline cursor-pointer'>Off Desks</a></h5>
         </div>
       </div>
     </div>

@@ -9,15 +9,15 @@ export default function CategoriesList(){
       const [hoverCall, setHoverCall] = useState(-1)
       return(
             <div className="container flex flex-col items-center gap-8 justify-center">
-                  <SectionHead1 className='font-extrabold uppercase tracking-wide underline underline-offset-3 decoration-3'>Types Of Bags We Provide</SectionHead1>                  
-                  <div className="w-full grid grid-cols-3 gap-14">
+                  <SectionHead1 className='font-extrabold uppercase tracking-wide text-center underline underline-offset-3 decoration-3'>Types Of Bags We Provide</SectionHead1>                  
+                  <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-14">
                         {
                               bagsTypes.map((bag,index)=> <div className="flex flex-col items-center gap-3 border pb-3" key={index}>
-                                    <div className="h-[21rem] w-full relative" onMouseEnter={() => setHoverCall(index)} onMouseLeave={() => setHoverCall(-1)}>
+                                    <div className="h-[16rem] lg:h-[21rem] w-full relative" onMouseEnter={() => setHoverCall(index)} onMouseLeave={() => setHoverCall(-1)}>
                                           <Image className="w-full h-full object-center border-b object-cover" src={`${bag.image}`} width={500} height={500} alt={`${bag.title} - Bag - By Lavish Whim`} />
                                           {
                                                 hoverCall === index ? <div className="absolute inset-0 z-10 top-0 left-0 w-full h-full flex items-center justify-center bg-black/40">
-                                                      <Link href={'/'} className="px-5 py-2 bg-white rounded-full">Shop Now</Link>
+                                                      <Link href={bag.link} className="px-5 font-bold italic py-2 bg-white rounded-full">Shop Now</Link>
                                                 </div> : null
                                           }
                                     </div>

@@ -7,70 +7,101 @@ import ProductCard from './product-card';
 import { X } from 'lucide-react';
 
 export default function ProductsTable({ category: propCategory = '' }) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+      const router = useRouter();
+      const searchParams = useSearchParams();
 
-  const [selectedCategory, setSelectedCategory] = useState('');
+      const [selectedCategory, setSelectedCategory] = useState('');
+      const [filtered, setFiltered] = useState('');
 
-  useEffect(() => {
-    if (propCategory) {
-      setSelectedCategory(propCategory);
-    } else {
-      setSelectedCategory('');
-    }
-  }, [propCategory]);
+      useEffect(() => {
+      if (propCategory) {
+            setSelectedCategory(propCategory);
+      } else {
+            setSelectedCategory('');
+      }
+      }, [propCategory]);
+      const getPrice = (product) => {
+            return product.onSale === 'true' ? product.salePrice : product.price;
+      }
+      const displayedProducts = useMemo(() => {
+            let filteredProducts = [...products];
+            if(selectedCategory) {
+                  const lower = selectedCategory.toLowerCase();         
+                  if (lower) {
+                        filteredProducts = filteredProducts.filter(p => p.type.toLowerCase() === lower);
+                  }
+            }
+            if(filtered ){
+                  if(filtered === 'price-asc'){
+                        filteredProducts.sort((a, b) => getPrice(a) - getPrice(b));
+                  } else if (filtered === 'price-desc'){
+                        filteredProducts.sort((a, b) => getPrice(b) - getPrice(a));
+                  } else if (filtered === 'name-asc'){
+                        filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+                  } else if (filtered === 'name-desc'){
+                        filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+                  }
+            }
+            return filteredProducts;
+      }, [selectedCategory, filtered]);
 
-  const displayedProducts = useMemo(() => {
-    const lower = selectedCategory.toLowerCase();
+      const clearFiltered = () => {
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.delete('category');
+            router.push(newUrl.pathname + newUrl.search, { scroll: false });
+      };
 
-    if (lower) {
-      return products.filter(p => p.type.toLowerCase() === lower);
-    }
+      const pretty = selectedCategory.replace(/-/g, ' ');
 
-    return [...products].sort((a, b) => a.type.localeCompare(b.type));
-  }, [selectedCategory]);
+      // useEffect(() => {
+      //       if (filtered === 'price-asc') {
+      // },[filtered])
 
-  const clearFilter = () => {
-    const newUrl = new URL(window.location);
-    newUrl.searchParams.delete('category');
-    router.push(newUrl.pathname + newUrl.search, { scroll: false });
-  };
+      return (
+      <div className="flex flex-col">
+            <div className="flex justify-between items-center my-3">
+                  <div className="flex gap-2">
+                        {selectedCategory && (
+                              <h4 className="flex items-center gap-1 font-semibold text-xs p-2 bg-neutral-200 rounded-full w-fit capitalize">
+                                    <X onClick={() => { clearFiltered(); setSelectedCategory('')}} className="cursor-pointer w-4 stroke-[4px] h-auto"/>
+                              {pretty}
+                              </h4>
+                        )}
+                  </div>
+                  <div className='flex items-center gap-2'>
+                        <select className='flex items-center gap-1 font-semibold text-xs py-2 px-3 border border-black rounded-sm w-fit capitalize' value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} >
+                              <option value=''>All Categories</option>
+                              <option value='handbag'>Handbags</option>
+                              <option value='crossbody-bag'>Crossbody Bags</option>
+                              <option value='tote-bag'>Tote bags</option>
+                              <option value='shoulder-bag'>Shoulder bags</option>
+                              <option value='canvas-bag'>Canvas bags</option>
+                              <option value='bridal-bag'>Bridal bags</option>
+                        </select>
+                        <select className='flex items-center gap-1 font-semibold text-xs py-2 px-3 border border-black rounded-sm w-fit capitalize' value={filtered} onChange={(e) => setFiltered(e.target.value)} >
+                              <option value=''>Sort By</option>
+                              <option value='price-asc'>Price: Low to High</option>
+                              <option value='price-desc'>Price: High to Low</option>
+                              <option value='name-asc'>Name: A to Z</option>
+                              <option value='name-desc'>Name: Z to A</option>
+                        </select>
+                  </div>
+            </div>
 
-  const pretty = selectedCategory.replace(/-/g, ' ');
+            <div className="w-full grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {displayedProducts.map((product, idx) => (
+            <ProductCard
+                  key={product.id ?? idx}
+                  product={product}
+            />
+            ))}
+            </div>
 
-  return (
-    <div className="flex flex-col">
-      {/* Filter Pill */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex gap-2">
-          {selectedCategory && (
-            <h4 className="flex items-center gap-1 font-semibold text-xs p-2 bg-neutral-200 rounded-full w-fit capitalize">
-              <X
-                onClick={clearFilter}
-                className="cursor-pointer w-4 stroke-[4px] h-auto"
-              />
-              {pretty}
-            </h4>
-          )}
-        </div>
+            {displayedProducts.length === 0 && (
+            <p className="text-center text-gray-500 mt-8">
+            No products found for “{pretty}”.
+            </p>
+            )}
       </div>
-
-      {/* Grid */}
-      <div className="w-full grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {displayedProducts.map((product, idx) => (
-          <ProductCard
-            key={product.id ?? idx}
-            product={product}
-          />
-        ))}
-      </div>
-
-      {/* Empty State */}
-      {displayedProducts.length === 0 && (
-        <p className="text-center text-gray-500 mt-8">
-          No products found for “{pretty}”.
-        </p>
-      )}
-    </div>
-  );
+      );
 }
