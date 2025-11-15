@@ -1,3 +1,4 @@
+'use client'
 import { ArrowRightCircle } from 'lucide-react'
 import Link from 'next/link';
 import React from 'react'
@@ -47,7 +48,7 @@ const Footer = () => {
   ]
   return (
     <div className='border-t border-neutral-200 pt-10 mt-20' >
-      <div className='lg:container flex flex-col'>
+      <div className={window.innerWidth > 999 ? 'container flex flex-col' : 'flex flex-col'}>
         <div className='grid grid-cols-1 lg:grid-cols-[35%_20%_20%_20%] gap-5 lg:gap-8 w-full pb-10'>
           <div className='flex flex-col p-4 gap-5'>
             <div className='flex flex-col'>

@@ -21,7 +21,7 @@ const SlideShow = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-[780px] overflow-hidden">
+    <div className="relative w-full h-[540px] lg:h-[780px] overflow-hidden">
       {slides.map((slide, index) => (
         <div
           key={index}
