@@ -16,9 +16,9 @@ export default function FeaturedProducts() {
                               products.slice(0,8).map((product, index) => <ProductCard product={product} key={index}/>)
                         }
                   </div>
-                  <div className='mt-4 grid grid-cols-1 lg:hidden gap-5 lg:gap-2 w-full border-b border-neutral-100 pb-10 mb-6'>
+                  <div className='mt-4 grid grid-cols-2 lg:hidden gap-3 w-full border-b border-neutral-100 pb-10 mb-6'>
                         {
-                              products.slice(0,4).map((product, index) => <ProductCard product={product} key={index}/>)
+                              products.slice(0,6).map((product, index) => <ProductCard product={product} key={index}/>)
                         }
                   </div>
                   <Link href={'/bags-by-lavish-whim'} className='border border-black text-md lg:text-lg py-2 px-5 rounded-sm w-fit mx-auto hover:bg-black hover:text-white transition-all ease-in-out duration-300'>Explore More Products</Link>

@@ -6,11 +6,19 @@ import Image from 'next/image';
 import products from '/public/content/products.json';
 import { useState, useEffect } from 'react';
 import { removeFromCart,increaseCountInCart, removeAllCountFromCart } from '@/store/slices/cartSlice';
+import { useRouter } from 'next/navigation';
 
 const CartSideView = ({ setShowCart, showCart }) => {
       const cartItems = useSelector((state) => state.cart.items);
       const [cartDetails, setCartDetails] = useState([]);
       const dispatch = useDispatch()
+      const router = useRouter()
+      
+      const checkoutCalled = () => {
+            router.push('/checkout-with-payment')
+            setShowCart(false)
+      }
+
       // Map cart items to full product details
       useEffect(() => {
       if (cartItems.length > 0) {
@@ -41,7 +49,7 @@ const CartSideView = ({ setShowCart, showCart }) => {
             onClick={() => setShowCart(false)}
       >
             <div
-            className={`w-full max-w-md h-full bg-white shadow-2xl flex flex-col transition-transform duration-500 ease-in-out ${
+            className={`w-full max-w-[86%] lg:max-w-md h-full bg-white shadow-2xl flex flex-col transition-transform duration-500 ease-in-out ${
             showCart ? 'translate-x-0' : 'translate-x-full'
             }`}
             onClick={(e) => e.stopPropagation()}
@@ -63,31 +71,31 @@ const CartSideView = ({ setShowCart, showCart }) => {
                   <p className="text-center text-gray-500 py-8">Your cart is empty</p>
             ) : (
                   cartDetails.map((item, index) => (
-                  <div key={index} className="flex gap-3 bg-gray-50 p-3 rounded-lg">
-                  <div className="relative w-20 h-20 flex-shrink-0">
-                        <Image
-                        src={item.image}
-                        alt={item.title}
-                        fill
-                        className="object-cover rounded-md"
-                        sizes="80px"
-                        />
-                  </div>
-                  <div className="flex-1">
-                        <h4 className="font-medium text-sm line-clamp-2">{item.title}</h4>
-                        <div className="text-sm flex gap-3 items-center">
-                              <h3>Qty: </h3>
-                              <MinusCircle className='w-4 h-4 ' onClick={() => dispatch(removeFromCart({id: item.id}))}/> 
-                              <h3>{item.qty}</h3> 
-                              <PlusCircle className='w-4 h-4' onClick={() => dispatch(increaseCountInCart({id: item.id}))}/>
+                  <div key={index} className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg">
+                        <div className="relative w-20 h-20 flex-shrink-0">
+                              <Image
+                              src={item.image}
+                              alt={item.title}
+                              fill
+                              className="object-cover rounded-md"
+                              sizes="80px"
+                              />
                         </div>
-                        <div className='flex justify-between items-center'>
-                              <p className="font-semibold text-sm">
-                                    Rs. {(item.price * item.qty).toLocaleString('en-PK')} PKR
-                              </p>
-                              <button onClick={() => dispatch(removeAllCountFromCart({id: item.id}))} className='text-red-600 text-sm underline'>Delete from cart</button>
+                        <div className="flex-1">
+                              <h4 className="font-medium text-sm line-clamp-2">{item.title}</h4>
+                              <div className="text-sm flex gap-3 items-center">
+                                    <h3>Qty: </h3>
+                                    <MinusCircle className='w-4 h-4 ' onClick={() => dispatch(removeFromCart({id: item.id}))}/> 
+                                    <h3>{item.qty}</h3> 
+                                    <PlusCircle className='w-4 h-4' onClick={() => dispatch(increaseCountInCart({id: item.id}))}/>
+                              </div>
+                              <div className='flex flex-col lg:flex-row justify-between lg:items-center'>
+                                    <p className="font-semibold text-sm">
+                                          Rs. {(item.price * item.qty).toLocaleString('en-PK')} PKR
+                                    </p>
+                                    <button onClick={() => dispatch(removeAllCountFromCart({id: item.id}))} className='text-red-600 text-sm underline'>Delete from cart</button>
+                              </div>
                         </div>
-                  </div>
                   </div>
                   ))
             )}
@@ -99,7 +107,7 @@ const CartSideView = ({ setShowCart, showCart }) => {
                   <span>Total</span>
                   <span>Rs. {totalBill.toLocaleString('en-PK')} PKR</span>
             </div>
-            <button className="w-full bg-black text-white py-3 rounded-md font-semibold hover:bg-gray-800 transition">
+            <button onClick={checkoutCalled} className="w-full bg-black text-white py-3 rounded-md font-semibold hover:bg-gray-800 transition">
                   Checkout
             </button>
             </div>

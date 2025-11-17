@@ -8,7 +8,7 @@ export default function Page(){
       const category = searchParams.get('category');
       
       return (
-            <div className="container py-14">
+            <div className="container py-6 lg:py-14">
                   <SectionHead1 className={'font-bold italic underline underline-offset-4'}>Bags Collection</SectionHead1>
                   <ProductsTable category={category}/>
             </div>

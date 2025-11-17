@@ -59,8 +59,8 @@ export default function ProductsTable({ category: propCategory = '' }) {
 
       return (
       <div className="flex flex-col">
-            <div className="flex justify-between items-center my-3">
-                  <div className="flex gap-2">
+            <div className="flex justify-between items-center my-5 lg:my-3">
+                  <div className="hidden lg:flex gap-2">
                         {selectedCategory && (
                               <h4 className="flex items-center gap-1 font-semibold text-xs p-2 bg-neutral-200 rounded-full w-fit capitalize">
                                     <X onClick={() => { clearFiltered(); setSelectedCategory('')}} className="cursor-pointer w-4 stroke-[4px] h-auto"/>
@@ -68,8 +68,8 @@ export default function ProductsTable({ category: propCategory = '' }) {
                               </h4>
                         )}
                   </div>
-                  <div className='flex items-center gap-2'>
-                        <select className='flex items-center gap-1 font-semibold text-xs py-2 px-3 border border-black rounded-sm w-fit capitalize' value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} >
+                  <div className='grid grid-cols-2 w-full lg:w-fit lg:flex items-center gap-2'>
+                        <select className='flex items-center gap-1 w-full lg:w-fit font-semibold text-xs py-2 px-3 border border-black rounded-sm w-fit capitalize' value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} >
                               <option value=''>All Categories</option>
                               <option value='handbag'>Handbags</option>
                               <option value='crossbody-bag'>Crossbody Bags</option>
@@ -78,7 +78,7 @@ export default function ProductsTable({ category: propCategory = '' }) {
                               <option value='canvas-bag'>Canvas bags</option>
                               <option value='bridal-bag'>Bridal bags</option>
                         </select>
-                        <select className='flex items-center gap-1 font-semibold text-xs py-2 px-3 border border-black rounded-sm w-fit capitalize' value={filtered} onChange={(e) => setFiltered(e.target.value)} >
+                        <select className='flex items-center gap-1  w-full lg:w-fit font-semibold text-xs py-2 px-3 border border-black rounded-sm w-fit capitalize' value={filtered} onChange={(e) => setFiltered(e.target.value)} >
                               <option value=''>Sort By</option>
                               <option value='price-asc'>Price: Low to High</option>
                               <option value='price-desc'>Price: High to Low</option>
@@ -88,7 +88,7 @@ export default function ProductsTable({ category: propCategory = '' }) {
                   </div>
             </div>
 
-            <div className="w-full grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="w-full grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 lg:gap-6">
             {displayedProducts.map((product, idx) => (
             <ProductCard
                   key={product.id ?? idx}

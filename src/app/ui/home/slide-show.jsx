@@ -33,6 +33,7 @@ const SlideShow = () => {
             src={slide}
             alt={`Slide ${index + 1}`}
             fill
+            priority={true}
             className="w-full h-full object-cover object-center"
           />
         </div>

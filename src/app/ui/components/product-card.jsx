@@ -14,9 +14,9 @@ export default function ProductCard({ product }) {
   const hoverImg = product.images[1] ?? defaultImg;
 
   return (
-    <div className="grid grid-cols-2 lg:flex lg:flex-col border rounded-sm shadow-sm overflow-hidden h-full">
+    <div className="flex flex-col border rounded-sm shadow-sm overflow-hidden h-full">
       <div
-        className="relative min-h-[12rem] h-full lg:h-[21rem] w-full cursor-pointer overflow-hidden"
+        className="relative min-h-[12rem] h-[13rem] lg:h-[21rem] w-full cursor-pointer overflow-hidden"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
