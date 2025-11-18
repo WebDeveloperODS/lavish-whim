@@ -119,9 +119,9 @@ const Footer = () => {
             <div className='flex flex-col gap-3 mt-2'>
               <h4 className='font-bold italic tracking-wide underline underline-offset-4 capitalize'>Follow us at</h4>
               <div className='flex gap-4'>
-                <FaFacebook className='h-9 w-9 text-white rounded-full bg-black p-2 hover:bg-red-700 cursor-pointer transition-all ease-in-out duration-400 cursor-pointer hover:scale-[1.05]' />
-                <FaInstagram className='h-9 w-9 text-white rounded-full bg-black p-2 hover:bg-red-700 cursor-pointer transition-all ease-in-out duration-400 cursor-pointer hover:scale-[1.05]' />
-                <FaTiktok className='h-9 w-9 text-white rounded-full bg-black p-2 hover:bg-red-700 cursor-pointer transition-all ease-in-out duration-400 cursor-pointer hover:scale-[1.05]' />
+                <Link href={'https://www.facebook.com/share/p/18ftHFuCrH/'}><FaFacebook className='h-9 w-9 text-white rounded-full bg-black p-2 hover:bg-red-700 cursor-pointer transition-all ease-in-out duration-400 cursor-pointer hover:scale-[1.05]'/></Link>
+                <Link href={'https://www.instagram.com/lavishwhim?igsh=NzhjN3J1eDRubm44'}><FaInstagram className='h-9 w-9 text-white rounded-full bg-black p-2 hover:bg-red-700 cursor-pointer transition-all ease-in-out duration-400 cursor-pointer hover:scale-[1.05]'/></Link>
+                <Link href={'https://www.tiktok.com/@lavishwhim.com?_t=ZS-8zub8ARmxuL&_r=1'}><FaTiktok className='h-9 w-9 text-white rounded-full bg-black p-2 hover:bg-red-700 cursor-pointer transition-all ease-in-out duration-400 cursor-pointer hover:scale-[1.05]'/></Link>
               </div>
             </div>
           </div>  
