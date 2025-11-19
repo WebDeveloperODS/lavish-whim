@@ -1,12 +1,22 @@
 'use client'
 import { ArrowRightCircle } from 'lucide-react'
 import Link from 'next/link';
-import React from 'react'
+import { usePathname } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
 import { FaFacebook, FaInstagram, FaTiktok } from 'react-icons/fa';
 import { PiEnvelopeDuotone, PiEnvelopeSimpleFill, PiPhoneCallDuotone } from "react-icons/pi";
 import { TbMapPin } from 'react-icons/tb';
 
 const Footer = () => {
+  const pathname = usePathname()
+  const [onPortal, setOnPortal] = useState(false)
+  useEffect(() => {
+    if(pathname.startsWith('/portal/dashboard')){
+      setOnPortal(true)
+    }else{ 
+      setOnPortal(false);
+    }
+  }, [pathname])
   const products = [
     {
       title: 'Handbags',
@@ -47,9 +57,9 @@ const Footer = () => {
     },
   ]
   return (
-    <div className='border-t border-neutral-200 pt-10 mt-20' >
+    <div className={onPortal ? 'hidden' :'border-t border-neutral-200 pt-10 mt-20'} >
       <div className={window.innerWidth > 999 ? 'container flex flex-col' : 'flex flex-col'}>
-        <div className='grid grid-cols-1 lg:grid-cols-[35%_20%_20%_20%] gap-5 lg:gap-8 w-full pb-10'>
+        <div className={'grid grid-cols-1 lg:grid-cols-[35%_20%_20%_20%] gap-5 lg:gap-8 w-full pb-10'}>
           <div className='flex flex-col p-4 gap-5'>
             <div className='flex flex-col'>
               <h3 className='text-lg capitalize font-bold tracking-wide leading-tight '>Let's get in touch</h3>

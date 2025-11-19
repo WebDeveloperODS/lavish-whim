@@ -1,4 +1,3 @@
-import AddProduct from "./ui/home/add-product";
 import FeaturedProducts from "./ui/home/featured-products";
 import SlideShow from "./ui/home/slide-show";
 import BlackVideo from "./ui/home/black-video";

@@ -1,19 +1,28 @@
 'use client'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SearchSection from './search-section';
 import CartButton from './cart-button';
 import { Menu } from '@/app/lib/menu-items';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import SideMenu from './side-menu';
 import { ChevronDown } from 'lucide-react';
 
 const Header = () => {
+      const pathname = usePathname()
       const router = useRouter()
+      const [onPortal, setOnPortal] = useState(false)
       const [forDrop, setForDrop] = useState(-1)
+      useEffect(() => {
+            if(pathname.startsWith('/portal/dashboard')){
+                  setOnPortal(true)
+            }else {
+                  setOnPortal(false)
+            }
+      },[pathname])
       return (
-            <div className={`flex flex-col relative w-full border-b shadow-sm shadow-neutral-100`}>
+            <div className={onPortal ? 'hidden' : `flex flex-col relative w-full border-b shadow-sm shadow-neutral-100`}>
                   
                   <div className='flex items-center justify-center bg-black w-full'>
                         <div className='container grid items-center grid-cols-1 lg:grid-cols-3 text-white py-1 text-xs lg:text-sm'>

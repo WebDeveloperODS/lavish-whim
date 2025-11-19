@@ -3,26 +3,40 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 const SlideShow = () => {
+  const [onMobile, setOnMobile] = useState(false);
   const slides = [
-    "/images/home/1.png",
+    "/images/home/1.jpg",
+    "/images/home/2.png",
+    "/images/home/3.png",
+  ];
+  const slides_m = [
+    "/images/home/1-m.jpg",
     "/images/home/2.png",
     "/images/home/3.png",
   ];
 
   const [current, setCurrent] = useState(0);
 
-  // Auto slide after 10 seconds
+  // Auto slide after 20 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
-    }, 10000); // 10 seconds
+    }, 20000); // 20 seconds
 
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if(window.innerWidth <= 1024){
+      setOnMobile(true);
+    } else {
+      setOnMobile(false);
+    }
+  })
+
   return (
-    <div className="relative w-full h-[540px] lg:h-[780px] overflow-hidden">
-      {slides.map((slide, index) => (
+    <div className="relative w-full h-[680px] lg:h-[780px] overflow-hidden">
+      {( onMobile ? slides_m : slides).map((slide, index) => (
         <div
           key={index}
           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
@@ -34,7 +48,7 @@ const SlideShow = () => {
             alt={`Slide ${index + 1}`}
             fill
             priority={true}
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-contain lg:object-fill object-center"
           />
         </div>
       ))}
