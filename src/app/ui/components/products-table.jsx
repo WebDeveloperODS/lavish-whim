@@ -25,6 +25,7 @@ export default function ProductsTable({ category: propCategory = '' }) {
       }
       const displayedProducts = useMemo(() => {
             let filteredProducts = [...products];
+            filteredProducts = filteredProducts.filter(p => p.status === 'live')
             if(selectedCategory) {
                   const lower = selectedCategory.toLowerCase();         
                   if (lower) {

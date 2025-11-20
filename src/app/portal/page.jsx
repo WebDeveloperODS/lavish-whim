@@ -25,10 +25,10 @@ export default function Page() {
         <h2 className="text-xl font-bold text-center mb-4">Login</h2>
 
         <label>Username</label>
-        <input value={username} onChange={e => setUsername(e.target.value)} />
+        <input className='px-2 py-1 rounded-md' value={username} onChange={e => setUsername(e.target.value)} />
 
         <label>Password</label>
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+        <input className='px-2 py-1 rounded-md' type="password" value={password} onChange={e => setPassword(e.target.value)} />
 
         <button onClick={loginUser} className="mt-4 bg-black text-white py-2 px-5 rounded-sm">
           Login

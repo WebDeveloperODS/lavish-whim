@@ -1,5 +1,5 @@
 export default async function Loading(){
-      return<div>
+      return <div>
             Loading
       </div>
 }
