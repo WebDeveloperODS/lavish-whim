@@ -35,7 +35,7 @@ const SlideShow = () => {
   })
 
   return (
-    <div className="relative w-full h-[680px] lg:h-[780px] overflow-hidden">
+    <div className="relative w-full h-[680px] lg:h-[86vh] overflow-hidden">
       {( onMobile ? slides_m : slides).map((slide, index) => (
         <div
           key={index}
@@ -48,7 +48,8 @@ const SlideShow = () => {
             alt={`Slide ${index + 1}`}
             fill
             priority={true}
-            className="w-full h-full object-contain lg:object-fill object-center"
+            sizes={""}
+            className="w-full h-full object-contain lg:object-cover object-center"
           />
         </div>
       ))}

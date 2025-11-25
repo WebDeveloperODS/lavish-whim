@@ -25,7 +25,10 @@ export const Menu = [
                         link: '/bags-by-lavish-whim?category=canvas-bag',
                   },{
                         title: 'bridal-bag',
-                        link: '/bags-by-lavish-whim?category=brida;-bag',
+                        link: '/bags-by-lavish-whim?category=bridal-bag',
+                  },{
+                        title: 'handmade-crochet-bags',
+                        link: '/bags-by-lavish-whim?category=handmade-crochet-bags',
                   },
             ]
       },

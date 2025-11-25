@@ -43,8 +43,8 @@ const Footer = () => {
       title: 'Contact us',
       link: '/contact-lavish-whim'
     },{
-      title: 'Term & condition',
-      link: '/'
+      title: 'Terms & conditions',
+      link: '/terms-and-conditions'
     },{
       title: 'Shipping policy',
       link: '/'

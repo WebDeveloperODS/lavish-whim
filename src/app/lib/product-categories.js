@@ -5,6 +5,7 @@ export const bagsTypes= [
       {title:'shoulder-bag', image: '/images/home/shoulder-bag.jpg', link: '/bags-by-lavish-whim?category=shoulder-bag'},
       {title:'canvas-bag', image: '/images/home/canvas-bag.jpg', link: '/bags-by-lavish-whim?category=canvas-bag'},
       {title:'bridal-bag', image: '/images/home/bridal-bag.jpg', link: '/bags-by-lavish-whim?category=bridal-bag'},
+      {title:'handmade-crochet-bag', image: '/images/home/bridal-bag.jpg', link: '/bags-by-lavish-whim?category=handmade-crochet-bag'},
 ]
 export const jewelleryTypes= [
       'jewellery-sets',

@@ -78,6 +78,7 @@ export default function ProductsTable({ category: propCategory = '' }) {
                               <option value='shoulder-bag'>Shoulder bags</option>
                               <option value='canvas-bag'>Canvas bags</option>
                               <option value='bridal-bag'>Bridal bags</option>
+                              <option value='handmade-crochet-bag'>Handmade crochet bags</option>
                         </select>
                         <select className='flex items-center gap-1  w-full lg:w-fit font-semibold text-xs py-2 px-3 border border-black rounded-sm w-fit capitalize' value={filtered} onChange={(e) => setFiltered(e.target.value)} >
                               <option value=''>Sort By</option>
