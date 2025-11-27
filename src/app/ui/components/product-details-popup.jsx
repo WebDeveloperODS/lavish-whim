@@ -40,7 +40,7 @@ export default function ProductDetailsPopUp({ product }) {
       const directPurchase = () => {
             dispatch(addToCart({id: product.product_id, title: product.title, price: product.onSale ? product.salePrice : product.price, qty: quantity}))
             setShowPop(false)
-            router.replace('/')
+            router.replace('/checkout-with-payment')
       }
       
       const parseDescription = (html) => ({ __html: html?.replace(/<p><br><\/p>/g, '').replace(/&nbsp;/g, ' ') || '' });

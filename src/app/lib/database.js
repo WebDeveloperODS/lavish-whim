@@ -33,11 +33,11 @@ const connectDb = async () => {
 const executeQuery = async (query, params) => {
   try{
     const db = await connectDb();
-    console.log('Executing Query:', query, params)
+    // console.log('Executing Query:', query, params)
     const [rows] = await db.execute(query,params)
     return rows;
   } catch (error) {
-    console.error("QUERY ERROR:", error);
+    // console.error("QUERY ERROR:", error);
     throw error;
   }
 }

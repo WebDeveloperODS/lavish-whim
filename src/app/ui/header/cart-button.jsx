@@ -26,11 +26,12 @@ const CartSideView = ({ setShowCart, showCart }) => {
                   const product = products.find((p) => p.product_id === item.id);
                   if (!product) 
                         return null;
+                  console.log(product)
                   return {
                         ...item,
                         title: product.title,
                         image: product.images[0],
-                        price: item.onSale === 'true' ? product.salePrice : product.price,
+                        price: product.onSale === "true" ? product.salePrice : product.price,
                   };
             }).filter(Boolean);
             setCartDetails(details);
