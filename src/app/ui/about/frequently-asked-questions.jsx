@@ -30,7 +30,7 @@ export default function FAQs(){
 
       const [activeNo, setActiveNo] = useState(-1);
 
-      return <div className="flex flex-col items-center gap-2 mt-8 lg:mt-20">
+      return <div className="flex flex-col items-center gap-2 mt-14 lg:mt-20">
             <SectionHead1 className={'font-bold uppercase tracking-wider underline underline-offset-4 decoration-3 decoration-red-700'}>Frequently Asked Questions (FAQs)</SectionHead1>
             <h3 className="text-md lg:text-lg tracking-wide capitalize font-semibold">Find quick answers to common queries about Lavish Whim online orders, returns, and delivery in Pakistan.</h3>
             <div className="mt-6 flex flex-col gap-4">
