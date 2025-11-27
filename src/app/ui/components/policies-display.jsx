@@ -8,15 +8,17 @@ const SubHeadings = ({index,children}) => {
 const PointsDisplay = ({parentIndex, points = []}) => {
       return <ul className="mx-6">
             {
-                  points.map((point, index) => <li className="tracking-wide" key={index}>
+                  points.length > 1 ? points.map((point, index) => <li className="tracking-wide" key={index}>
                         <span className="text-sm mt-[2px] font-bold">{`${parentIndex}.${index+1})`}</span> {point}
-                  </li>)
+                  </li> ) : <li className="tracking-wide">
+                        {points[0]}
+                  </li>
             }
       </ul>
 }
 
 export default function PoliciesDisplay({policies}){
-      return <div className="container flex flex-col gap-3 py-6 lg:pt-14">
+      return <div className="container lg:px-28 2xl:px-[8vw] flex flex-col gap-3 py-6 lg:pt-14">
             <SectionHead1 className={'font-bold italic underline underline-offset-4'}>{policies.title}</SectionHead1>
             <h3 className="text-sm lg:text-md capitalize tracking-wide">
                   {policies.welcomeMsg}

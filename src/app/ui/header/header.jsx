@@ -53,7 +53,7 @@ const Header = () => {
                                                       </div>
                                                       <div className='flex flex-col justify-center p-4 gap-3'>
                                                             {
-                                                                  item.childs && item.childs.map((child, cIndex) => <Link key={cIndex} className='capitalize tracking-wide font-medium px-1 hover:underline decoration-red-700 underline-offset-4' href={child.link}>{child.title.replace('-',' ')}</Link>)
+                                                                  item.childs && item.childs.map((child, cIndex) => <Link key={cIndex} className='capitalize tracking-wide font-medium px-1 hover:underline decoration-red-700 underline-offset-4' href={child.link}>{child.title.replaceAll('-',' ')}</Link>)
                                                             }
                                                             {
                                                                   item.context && <h3>{item.context}</h3>
