@@ -4,10 +4,11 @@ import { NextResponse } from "next/server"
 export async function POST(req){
       try {
             const data = await req.json()
-            // console.log(data)
-            const products = data.products ?? []
+            console.log(data)
+            const products = data.products ?? [];
             const customer = data.customer;
             const address = data.address;
+            const payment = data.payment;
             // console.log(products, customer, address)
             await executeQuery(`
                   CREATE TABLE IF NOT EXISTS orders (
@@ -21,6 +22,12 @@ export async function POST(req){
                         state TEXT,
                         country TEXT,
                         zipCode TEXT,
+                        subTotal TEXT,
+                        discountTotal TEXT,
+                        total TEXT,
+                        payment_thru TEXT,
+                        payment_status TEXT,
+                        orderStaus ENUM("completed","new","cancelled","under packaging","list for delivery") DEFAULT "new",
                         dated TIMESTAMP
                   );
             `)
@@ -37,41 +44,39 @@ export async function POST(req){
                         discounted_price TEXT DEFAULT 0,
                         FOREIGN KEY (order_id) REFERENCES orders (order_id));
             `)
-            const response = await executeQuery('INSERT INTO orders (customerName,contactNo,email,gender, street,city,state,country,zipCode,dated) VALUES (?,?,?,?,?,?,?,?,?,NOW());',
-                  [customer.fullname, customer.contact, customer.email, customer.gender, address.street, address.city, address.state, address.country, address.zipCode ?? '']
+            const response = await executeQuery('INSERT INTO orders (customerName,contactNo,email,gender,street,city,state,country,zipCode,dated,subTotal,discountTotal, total, payment_thru, payment_status) VALUES (?,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?);',
+                  [customer.fullname, customer.contact, customer.email, customer.gender, address.street, address.city, address.state, address.country, address.zipCode ?? '',payment.subTotal, payment.discountTotal, payment.total, payment.paymentThru, payment.paymentStatus]
             )
-            if(response){
-                  const orderData = await executeQuery('SELECT order_id FROM orders WHERE dated=NOW() AND customerName=? AND contactNo=? AND email=?;',[customer.fullname, customer.contact, customer.email])
-                  const orderId = orderData[0].order_id
-                  const values = products.map(p => [
-                        orderId,
-                        p.id,
-                        p.title,
-                        p.image,
-                        p.qty,
-                        p.price,
-                        p.discounted,
-                        p.discountedPrice ?? "0"
-                  ])
-                  const placeholders = values.map(() => "(?,?,?,?,?,?,?,?)").join(",")
+            const orderData = await executeQuery('SELECT order_id FROM orders WHERE dated=NOW() AND customerName=? AND contactNo=? AND email=?;',[customer.fullname, customer.contact, customer.email])
+            const orderId = orderData[0].order_id
+            const values = products.map(p => [
+                  orderId,
+                  p.id,
+                  p.title,
+                  p.image,
+                  p.qty,
+                  p.price,
+                  p.discounted,
+                  p.discountedPrice ?? "0"
+            ])
+            const placeholders = values.map(() => "(?,?,?,?,?,?,?,?)").join(",")
 
-                  const resp = await executeQuery(
-                  `INSERT INTO ordered_products 
-                  (order_id,product_id,title,image,qty,price,discounted,discounted_price) 
-                  VALUES ${placeholders}`,
-                  values.flat()
-                  )
-
-                  if(resp){
-                        return NextResponse.json({status: 200 , message: 'Successful'})
-                  }else{
-                        return NextResponse.json({status: 302, message: 'Failed to add ordered products.'})
-                  }
-                  
+            const resp = await executeQuery(
+            `INSERT INTO ordered_products 
+            (order_id,product_id,title,image,qty,price,discounted,discounted_price) 
+            VALUES ${placeholders}`,
+            values.flat()
+            )
+            console.log(response)
+            console.log(resp)
+            if(resp && response){
+                  return NextResponse.json({status: 200 , message: 'Successful'})
             }else{
-                  return NextResponse.json({status: 302, message: 'Failed to add order customer details.'})
+                  return NextResponse.json({status: 302, message: 'Failed to add ordered products.'})
             }
-      } catch {
+            
+      } catch (error) {
+            console.error(error)
             return NextResponse.json({status: 500})
       }
 }

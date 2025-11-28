@@ -46,14 +46,14 @@ const Footer = () => {
       title: 'Terms & conditions',
       link: '/terms-and-conditions'
     },{
-      title: 'Shipping policy',
-      link: '/'
+      title: 'Shipping & Handling',
+      link: '/shipping-and-handling'
     },{
       title: 'Refund policy',
-      link: '/'
+      link: '/refund-policy'
     },{
       title: 'Privacy policy',
-      link: '/'
+      link: '/privacy-policy'
     },
   ]
   return (

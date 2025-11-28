@@ -20,9 +20,9 @@ const connectDb = async () => {
 
       const conn = await pool.getConnection()
       conn.release();
-      // console.log(pool)
+      // console.log(conn)
     } catch (error) {
-      console.error('Unable to connect to database')
+      console.log('Unable to connect to database')
       pool = null
       throw error  
     }

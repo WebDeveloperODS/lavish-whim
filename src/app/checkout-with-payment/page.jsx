@@ -5,13 +5,19 @@ import { useSelector, useDispatch } from "react-redux";
 import products from '/public/content/products.json';
 import Image from "next/image";
 import { PlusCircle, MinusCircle } from "lucide-react";
-import { increaseCountInCart, removeAllCountFromCart, removeFromCart } from "store/slices/cartSlice";
+import { clearCart, increaseCountInCart, removeAllCountFromCart, removeFromCart } from "store/slices/cartSlice";
+import { FaDoorOpen, FaWhatsapp } from "react-icons/fa";
+import { Trash2Icon } from "lucide-react";
+import SectionHead1 from "app/ui/components/main-heading";
+import Link from "next/link";
 
 export default function Page(){
       const dispatch = useDispatch();
       const cartItems = useSelector((state) => state.cart.items);
       const [customerCart, setCustomerCart] = useState([]);
-      // const [paymentOption,setPaymentOption] = useState('Cash on delivery')
+      const [displayMsg, setDisplayMsg] = useState(false);
+      const [paymentOption,setPaymentOption] = useState('Cash on delivery')
+      const [paymentStatus,setPaymentStatus] = useState('waiting')
       const [customer, setCustomer] = useState({
             fullname: '',
             contact: '',
@@ -75,6 +81,13 @@ export default function Page(){
 
             const orderFinal = {
                   products: customerCart,
+                  payment: {
+                        subTotal: String(subTotal),
+                        discountTotal: String(discountTotal),
+                        total: String(total),
+                        paymentThru: paymentOption,
+                        paymentStatus: paymentStatus
+                  },
                   customer: customer,
                   address: address
             }
@@ -85,118 +98,157 @@ export default function Page(){
                   },
                   body: JSON.stringify(orderFinal)
             }).then(res => res.json())
+            console.log(output)
             if(output.status === 200){
-                  alert('Successful')
+                  setDisplayMsg(true)
+                  dispatch(clearCart())
             }
             
       };
 
+      useEffect(() => {
+            if(displayMsg === true){
+                  const interval = setInterval(() => {
+                        window.location.href='/';
+                  }, 6*10000); // 10 seconds
+                  return () => clearInterval(interval);
+            }
+      },[displayMsg])
+
+      if(displayMsg){
+            return <div className="container h-[60vh] flex flex-col items-center justify-center gap-8 text-center">
+                  <SectionHead1 className={'italic font-semibold capitalize tracking-wide underline underline-offset-4 decoration-2 decoration-red-700'}>Thank you for your order</SectionHead1>
+                  <h3 className="tracking-wide font-semibold text-md lg:text-lg capitalize">For getting benefy by the offers, packages or deals by <b>LAVISH WHIM</b>.</h3>
+                  <Link className="py-2 px-4 rounded-full font-semibold text-white bg-green-600 flex items-center gap-5 capitalize" href={''}>Join us on WhatsApp <FaWhatsapp /></Link>
+            </div>
+      }
       return (
             <div className="container py-10 lg:pt-16">
-                  <div className="grid grid-cols-[65%_35%] w-full relative">
-                  <div className="flex flex-col gap-4 pr-4">
-                        <SectionHead2 className="font-bold uppercase tracking-wider underline underline-offset-4 decoration-3 decoration-red-700">
-                              Checkout Order
-                        </SectionHead2>
+                  <div className="grid grid-cols-1 lg:grid-cols-[65%_35%] w-full relative">
+                        <div className="flex flex-col gap-4 lg:pr-4">
+                              <SectionHead2 className="font-bold uppercase tracking-wider underline underline-offset-4 decoration-3 decoration-red-700">
+                                    Checkout Order
+                              </SectionHead2>
 
-                        <div className="flex flex-col gap-6 pb-6">
-                              {customerCart.length === 0 ? (
-                              <p className="text-center text-gray-500 py-8">Your cart is empty</p>
-                              ) : (
-                              customerCart.map((item, index) => (
-                                    <div key={index} className="flex items-center gap-3 bg-gray-50 shadow-md p-3 rounded-lg">
+                              <div className="flex flex-col gap-6 pb-6">
+                                    {customerCart.length === 0 ? (
+                                    <p className="text-center text-gray-500 py-8">Your cart is empty</p>
+                                    ) : (
+                                    customerCart.map((item, index) => (
+                                          <div key={index} className="flex items-center gap-3 bg-gray-50 shadow-md p-3 rounded-lg">
 
-                                          <div className="relative w-20 h-20 flex-shrink-0">
-                                          <Image
-                                                src={item.image}
-                                                alt={item.title}
-                                                fill
-                                                className="object-cover rounded-md"
-                                                sizes="80px"
-                                          />
-                                          </div>
-
-                                          <div className="flex-1">
-                                          <h4 className="font-medium text-sm line-clamp-2">{item.title}</h4>
-
-                                          <div className="text-sm flex gap-3 items-center">
-                                                <h3>Qty:</h3>
-                                                <MinusCircle
-                                                      className="w-4 h-4 cursor-pointer"
-                                                      onClick={() => dispatch(removeFromCart({ id: item.id }))}
+                                                <div className="relative w-20 h-20 flex-shrink-0">
+                                                <Image
+                                                      src={item.image}
+                                                      alt={item.title}
+                                                      fill
+                                                      className="object-cover rounded-md"
+                                                      sizes="80px"
                                                 />
-                                                <h3>{item.qty}</h3>
-                                                <PlusCircle
-                                                      className="w-4 h-4 cursor-pointer"
-                                                      onClick={() => dispatch(increaseCountInCart({ id: item.id }))}
-                                                />
-                                          </div>
-
-                                          <div className="flex flex-col lg:flex-row justify-between lg:items-center">
-                                                <div className="lg:mt-3 flex items-center gap-3">
-                                                      {item.discounted ? (
-                                                      <div className="flex gap-2 items-end">
-                                                            <span className="text-sm mb-[2px] line-through text-gray-500">
-                                                                  Rs. {item.price.toLocaleString("en-PK")} PKR
-                                                            </span>
-                                                            <span className="text-lg font-bold text-red-600">
-                                                                  Rs. {item.discountedPrice.toLocaleString("en-PK")} PKR
-                                                            </span>
-                                                      </div>
-                                                      ) : (
-                                                      <span className="text-md lg:text-lg font-bold">
-                                                            Rs. {item.price.toLocaleString("en-PK")} PKR
-                                                      </span>
-                                                      )}
                                                 </div>
 
-                                                <button
-                                                      onClick={() => dispatch(removeAllCountFromCart({ id: item.id }))}
-                                                      className="text-red-600 text-sm underline"
-                                                >
-                                                      Delete from cart
-                                                </button>
+                                                <div className="flex-1">
+                                                <h4 className="font-medium text-sm line-clamp-2">{item.title}</h4>
+
+                                                <div className="text-sm flex gap-3 items-center">
+                                                      <h3>Qty:</h3>
+                                                      <MinusCircle
+                                                            className="w-4 h-4 cursor-pointer"
+                                                            onClick={() => dispatch(removeFromCart({ id: item.id }))}
+                                                      />
+                                                      <h3>{item.qty}</h3>
+                                                      <PlusCircle
+                                                            className="w-4 h-4 cursor-pointer"
+                                                            onClick={() => dispatch(increaseCountInCart({ id: item.id }))}
+                                                      />
+                                                </div>
+
+                                                <div className="flex flex-row justify-between items-center">
+                                                      <div className="lg:mt-3 flex items-center gap-3">
+                                                            {item.discounted ? (
+                                                            <div className="flex gap-2 items-end">
+                                                                  <span className="text-sm mb-[2px] line-through text-gray-500">
+                                                                        Rs. {item.price.toLocaleString("en-PK")} PKR
+                                                                  </span>
+                                                                  <span className="text-lg font-bold text-red-600">
+                                                                        Rs. {item.discountedPrice.toLocaleString("en-PK")} PKR
+                                                                  </span>
+                                                            </div>
+                                                            ) : (
+                                                            <span className="text-md lg:text-lg font-bold">
+                                                                  Rs. {item.price.toLocaleString("en-PK")} PKR
+                                                            </span>
+                                                            )}
+                                                      </div>
+
+                                                      <button
+                                                            onClick={() => dispatch(removeAllCountFromCart({ id: item.id }))}
+                                                            className="text-red-600 text-sm underline"
+                                                      >
+                                                            {
+                                                                  window.innerWidth < 1024 ? <Trash2Icon className="w-5 h-auto"/> : 'Delete from cart'
+                                                            }
+                                                      </button>
+                                                </div>
+                                                </div>
                                           </div>
-                                          </div>
+                                    ))
+                                    )}
+                              </div>
+                        </div>
+
+                        <div className="lg:border-l lg:pl-6 ">
+                              <div className="flex flex-col gap-3 text-sm">
+                                    <h2 className="font-bold text-lg xl:text-xl">Order Summary</h2>
+                                    <div className="flex justify-between">
+                                          <span>Subtotal</span>
+                                          <span>Rs. {subTotal.toLocaleString("en-PK")}</span>
                                     </div>
-                              ))
-                              )}
+
+                                    <div className="flex justify-between">
+                                          <span>Shipping</span>
+                                          <span>Free</span>
+                                    </div>
+
+                                    <div className="flex justify-between text-green-600">
+                                          <span>Discount</span>
+                                          <span>- Rs. {discountTotal.toLocaleString("en-PK")}</span>
+                                    </div>
+
+                                    <hr className="my-2" />
+
+                                    <div className="flex justify-between font-bold text-lg">
+                                          <span>Total</span>
+                                          <span>Rs. {total.toLocaleString("en-PK")}</span>
+                                    </div>
+
+                                    <hr className="my-2" />
+                                    <h2 className="font-bold text-lg xl:text-xl">Payment Options</h2>
+                                    <div className="flex items-center gap-2 w-full border-2 border-black rounded-lg p-3 cursor-pointer" onClick={() => setPaymentOption('Cash on delivery')}>
+                                          <div className="border-2 p-[2px] border-black w-4 h-4 rounded-full">
+                                                <div className="bg-black w-full h-full rounded-full"/>
+                                          </div>
+                                          <h3 className="flex justify-between items-center w-full text-sm lg:text-md font-bold uppercase tracking-wide">
+                                                Cash On Delivery
+                                                <FaDoorOpen className="w-6 h-auto"/>      
+                                          </h3>
+                                    </div>
+                                    {/* <div className="flex items-center gap-2 w-full border-2 border-black rounded-lg p-3 cursor-pointer" onClick={() => setPaymentOption('Cash on delivery')}>
+                                          <div className="border-2 p-[2px] border-black w-4 h-4 rounded-full">
+                                                <div className="bg-black w-full h-full rounded-full"/>
+                                          </div>
+                                          <h3 className="flex justify-between items-center w-full text-sm lg:text-md font-bold uppercase tracking-wide">
+                                                Online payment
+                                                <FaDoorOpen className="w-6 h-auto"/>      
+                                          </h3>
+                                    </div> */}
+                              </div>
                         </div>
-                  </div>
-
-                  <div className="border-l pl-6 ">
-                        <div className="flex flex-col gap-3 text-sm">
-                              <h2 className="font-bold text-xl">Order Summary</h2>
-                              <div className="flex justify-between">
-                                    <span>Subtotal</span>
-                                    <span>Rs. {subTotal.toLocaleString("en-PK")}</span>
-                              </div>
-
-                              <div className="flex justify-between">
-                                    <span>Shipping</span>
-                                    <span>Free</span>
-                              </div>
-
-                              <div className="flex justify-between text-green-600">
-                                    <span>Discount</span>
-                                    <span>- Rs. {discountTotal.toLocaleString("en-PK")}</span>
-                              </div>
-
-                              <hr className="my-2" />
-
-                              <div className="flex justify-between font-bold text-lg">
-                                    <span>Total</span>
-                                    <span>Rs. {total.toLocaleString("en-PK")}</span>
-                              </div>
-
-                              <hr className="my-2" />
-                        </div>
-                  </div>
 
                   </div>
                   <hr className="my-6"/>
-                  <form onSubmit={validateOrder} className="grid grid-cols-2 gap-3">
-                        <h2 className="font-bold text-xl col-span-full">Details</h2>
+                  <form onSubmit={validateOrder} className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                        <h2 className="font-bold text-lg xl:text-xl col-span-full">Details</h2>
                         <div className="flex flex-col gap-0">
                               <label className="font-semibold text-sm" htmlFor="fullname">Name</label>
                               <input type="text" name="fullname" id="fullname" required className="p-2 rounded-md border" value={customer.fullname} onChange={(e) => setCustomer((prev) => ({...prev, fullname: e.target.value}))} placeholder="Fullname..." />
@@ -218,7 +270,7 @@ export default function Page(){
                               </select>
                         </div>
 
-                        <h2 className="font-bold text-xl mt-4 col-span-full">Address</h2>
+                        <h2 className="font-bold text-lg xl:text-xl mt-4 col-span-full">Address</h2>
                         <div className="flex flex-col gap-0">
                               <label className="font-semibold text-sm" htmlFor="street">Street</label>
                               <input type="text" name="street" id="street" required className="p-2 rounded-md border" value={address.street} onChange={(e) => setAddress((prev) => ({...prev, street: e.target.value}))} placeholder="House No. / Street No. / Colony..." />
