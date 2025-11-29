@@ -91,7 +91,7 @@ export default function ProductsTable({ category: propCategory = '' }) {
             </div>
 
             <div className="w-full grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 lg:gap-6">
-            {displayedProducts.map((product, idx) => (
+            {displayedProducts.sort((a, b) => new Date(b.dated) - new Date(a.dated)).map((product, idx) => (
             <ProductCard
                   key={product.id ?? idx}
                   product={product}
