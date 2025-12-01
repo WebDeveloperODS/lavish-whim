@@ -24,7 +24,7 @@ export default function ProductsTable({ category: propCategory = '' }) {
             return product.onSale === 'true' ? product.salePrice : product.price;
       }
       const displayedProducts = useMemo(() => {
-            let filteredProducts = [...products];
+            let filteredProducts = [...products.sort((a, b) => new Date(b.dated) - new Date(a.dated))];
             filteredProducts = filteredProducts.filter(p => p.status === 'live')
             if(selectedCategory) {
                   const lower = selectedCategory.toLowerCase();         
@@ -38,9 +38,9 @@ export default function ProductsTable({ category: propCategory = '' }) {
                   } else if (filtered === 'price-desc'){
                         filteredProducts.sort((a, b) => getPrice(b) - getPrice(a));
                   } else if (filtered === 'name-asc'){
-                        filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+                        filteredProducts.sort((a, b) => a.title.localeCompare(b.title));
                   } else if (filtered === 'name-desc'){
-                        filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+                        filteredProducts.sort((a, b) => b.title.localeCompare(a.title));
                   }
             }
             return filteredProducts;
@@ -91,12 +91,12 @@ export default function ProductsTable({ category: propCategory = '' }) {
             </div>
 
             <div className="w-full grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 lg:gap-6">
-            {displayedProducts.sort((a, b) => new Date(b.dated) - new Date(a.dated)).map((product, idx) => (
-            <ProductCard
-                  key={product.id ?? idx}
-                  product={product}
-            />
-            ))}
+            {displayedProducts.map((product, idx) => (
+                  <ProductCard
+                        key={product.id ?? idx}
+                        product={product}
+                  />
+                  ))}
             </div>
 
             {displayedProducts.length === 0 && (

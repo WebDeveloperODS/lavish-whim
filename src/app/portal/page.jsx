@@ -19,18 +19,19 @@ export default function Page() {
 
   return (
     <div className="container flex flex-col items-center py-10 gap-10">
-      <SectionHead1>Welcome To Lavish Whim Portal</SectionHead1>
+      <SectionHead1 className={'font-bold uppercase tracking-wider underline underline-offset-4 decoration-3 decoration-red-700'}>Welcome To Lavish Whim Portal</SectionHead1>
 
       <div className="flex flex-col gap-3 w-[30vw] p-6 border border-neutral-200 shadow-md rounded-md">
         <h2 className="text-xl font-bold text-center mb-4">Login</h2>
-
-        <label>Username</label>
-        <input className='px-2 py-1 rounded-md' value={username} onChange={e => setUsername(e.target.value)} />
-
-        <label>Password</label>
-        <input className='px-2 py-1 rounded-md' type="password" value={password} onChange={e => setPassword(e.target.value)} />
-
-        <button onClick={loginUser} className="mt-4 bg-black text-white py-2 px-5 rounded-sm">
+        <div className="flex flex-col gap-1">
+          <label>Username</label>
+          <input className='px-2 bg-gray-100 py-1 rounded-md border' value={username} onChange={e => setUsername(e.target.value)} />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label>Password</label>
+          <input className='px-2 bg-gray-100 py-1 rounded-md border' type="password" value={password} onChange={e => setPassword(e.target.value)} />
+        </div>
+        <button type="button" onClick={loginUser} className="mt-4 bg-black text-white py-2 px-5 rounded-sm">
           Login
         </button>
       </div>

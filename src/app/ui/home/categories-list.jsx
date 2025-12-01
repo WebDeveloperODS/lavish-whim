@@ -12,7 +12,7 @@ export default function CategoriesList(){
                   <SectionHead1 className='font-bold uppercase tracking-wider underline underline-offset-4 decoration-3 decoration-red-700'>Types Of Bags We Provide</SectionHead1>                  
                   <div className="w-full grid grid-cols-1 lg:flex lg:flex-wrap gap-4 lg:gap-8 lg:justify-center">
                         {
-                              bagsTypes.map((bag,index)=> <div className="flex lg:w-[15vw] flex-col items-center gap-3 border pb-3" key={index}>
+                              bagsTypes.map((bag,index)=> <div className="flex lg:w-[15vw] 2xl:w-[17vw] flex-col items-center gap-3 border pb-3" key={index}>
                                     <div className="h-[16rem] lg:h-[21rem] w-full relative" onMouseEnter={() => setHoverCall(index)} onMouseLeave={() => setHoverCall(-1)}>
                                           <Image className="w-full h-full object-center border-b object-cover" src={`${bag.image}`} width={500} height={500} alt={`${bag.title} - Bag - By Lavish Whim`} />
                                           {
@@ -21,7 +21,7 @@ export default function CategoriesList(){
                                                 </div> : null
                                           }
                                     </div>
-                                    <h3 className="text-sm lg:text-md 2xl:text-lg uppercase tracking-wide">{bag.title.replaceAll('-',' ')}</h3>
+                                    <h3 className="text-sm lg:text-md 2xl:text-lg uppercase text-center [x-4] tracking-wide">{bag.title.replaceAll('-',' ')}</h3>
                               </div>)
                         }
                   </div>

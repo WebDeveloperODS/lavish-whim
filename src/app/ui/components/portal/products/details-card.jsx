@@ -61,11 +61,11 @@ export default function DetailsCard({ product, callReload }) {
                         </div>
                         <div className='flex text-sm gap-2'>
                               <h3 className='font-bold'>On Sale: </h3>
-                              <h3 className=''>{product.onSale === "true" ? 'Yes' : 'No'}</h3>
+                              <h3 className=''>{product.onSale === "true" ? <>Yes - {formatPKR(product.salePrice)}</> : 'No'}</h3>
                         </div>
                         <div className='flex text-sm gap-2'>
-                              <h3 className='font-bold'>On Sale Price: </h3>
-                              <h3 className=''>{product.onSale === 'true' ? formatPKR(product.salePrice) : '---'}</h3>
+                              <h3 className='font-bold'>Added On: </h3>
+                              <h3 className=''>{product.dated.split('T')[0].split('-')[2]}-{product.dated.split('T')[0].split('-')[1]}-{product.dated.split('T')[0].split('-')[0]}</h3>
                         </div>
                   </div>
                   <Link href={`/portal/dashboard/products-list/${product.product_id}`} className='py-1 px-2 rounded-sm font-semibold text-sm border-2 hover:bg-red-700 text-red-700 hover:text-white border-red-700 mt-2'>Checkout Details</Link>

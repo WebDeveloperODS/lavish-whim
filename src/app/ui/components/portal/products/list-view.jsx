@@ -3,15 +3,15 @@
 import { useEffect, useState } from 'react';
 import DetailsCard from './details-card';
 
-export default function ListView({ selectedCategory }) {
+export default function ListView({ countFunc, selectedCategory }) {
       const [reload, setReload] = useState(false)          
       const [products, setProducts] = useState([]);
-
       async function loadProducts() {
             try {
                   const res = await fetch(`/content/products.json`);
                   const data = await res.json();
                   setProducts(data);
+                  // countFunc(data.length)
             } catch (error) {
                   console.error("Failed to load products:", error);
             }
@@ -20,7 +20,8 @@ export default function ListView({ selectedCategory }) {
             loadProducts();
       }, []);
 
-      const filteredProducts = selectedCategory ? products.filter( (p) => p.type?.toLowerCase() === selectedCategory.toLowerCase()) : products;
+      const filteredProducts = selectedCategory ? products.sort((a, b) => new Date(b.dated) - new Date(a.dated)).filter( (p) => p.type?.toLowerCase() === selectedCategory.toLowerCase()) : products.sort((a, b) => new Date(b.dated) - new Date(a.dated));
+      countFunc(filteredProducts.length)
 
       useEffect(() => {
             if(reload === true){
@@ -37,11 +38,11 @@ export default function ListView({ selectedCategory }) {
             </div>
 
             {filteredProducts.length === 0 && (
-            <p className="text-center text-gray-500 mt-8">
-                  {
-                        selectedCategory ? <>No products found for “{selectedCategory}”.</> : <>No category selected</>
-                  }
-            </p>
+                  <p className="text-center text-gray-500 mt-8">
+                        {
+                              selectedCategory ? <>No products found for “{selectedCategory}”.</> : <>No category selected</>
+                        }
+                  </p>
             )}
       </div>
       );

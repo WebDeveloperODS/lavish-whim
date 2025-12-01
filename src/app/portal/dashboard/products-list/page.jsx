@@ -7,11 +7,11 @@ export default function Page(){
       const [category, setCategory] = useState('');
       const [status, setStatus] = useState('');
       const [saleStatus, setSaleStatus] = useState('');
-      
+      const [productsCount, setProductsCount] = useState(0)
       return(
             <div className="max-w-full">
                   <div className="flex items-center justify-between mb-3">
-                        <SectionHead2 className={'font-bold tracking-wide underline underline-offset-3 decoration-2 decoration-red-700'}>All Listed Products</SectionHead2>
+                        <SectionHead2 className={'relative font-bold tracking-wide underline underline-offset-3 decoration-2 decoration-red-700'}>All Listed Products <span className="absolute -right-16 font-semibold text-xs bottom-1">Items: {productsCount}</span></SectionHead2>
                         <div className="flex items-center gap-3">
                               
                               <select name="saleStatus" value={saleStatus} className="px-2 py-1 rounded-full text-sm bg-gray-100" onChange={(e)  => setSaleStatus(e.target.value)}>
@@ -35,7 +35,7 @@ export default function Page(){
                               </select>
                         </div>
                   </div>
-                  <ListView selectedCategory={category}/>
+                  <ListView countFunc={setProductsCount} selectedCategory={category}/>
             </div>
       )
 }
