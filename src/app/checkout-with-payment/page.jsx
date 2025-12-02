@@ -118,8 +118,8 @@ export default function Page(){
       if(displayMsg){
             return <div className="container h-[60vh] flex flex-col items-center justify-center gap-8 text-center">
                   <SectionHead1 className={'italic font-semibold capitalize tracking-wide underline underline-offset-4 decoration-2 decoration-red-700'}>Thank you for your order</SectionHead1>
-                  <h3 className="tracking-wide font-semibold text-md lg:text-lg capitalize">For getting benefy by the offers, packages or deals by <b>LAVISH WHIM</b>.</h3>
-                  <Link className="py-2 px-4 rounded-full font-semibold text-white bg-green-600 flex items-center gap-5 capitalize" href={''}>Join us on WhatsApp <FaWhatsapp /></Link>
+                  <h3 className="tracking-wide font-semibold text-md lg:text-lg capitalize">Join <b>LAVISH WHIM</b> on the WhatsApp to get 10% on your next purchase.</h3>
+                  <Link className="py-2 px-4 rounded-full font-semibold text-white bg-green-600 flex items-center gap-5 capitalize" href={'https://chat.whatsapp.com/BbDKVESs8p6E39fn0n8o6V?mode=hqrc'}>Let's join lavish whim <FaWhatsapp /></Link>
             </div>
       }
       return (

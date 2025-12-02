@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { X } from "lucide-react"
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
+import { colors } from 'app/lib/colors'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const AddProduct = () => {
@@ -154,8 +155,10 @@ const AddProduct = () => {
               <div className='flex flex-wrap gap-2 mb-3'>
                 {productData.colors.map((color, index) => (
                   <div key={index} className='flex items-center gap-2 bg-white border rounded-full px-3 py-1 shadow-sm'>
-                    <div className='w-5 h-5 rounded-full border' style={{ backgroundColor: color }}></div>
-                    <span className='text-sm capitalize text-gray-700'>{color}</span>
+                    {
+                      colors.find(c => c.name.toLowerCase() === color.toLowerCase()) && <div className='w-5 h-5 rounded-full border' style={{ backgroundColor: colors.find(c => c.name.toLowerCase() === color.toLowerCase())?.hex }}></div> 
+                    }
+                    <span className='text-sm capitalize text-gray-700'>  {colors.find(c => c.name.toLowerCase() === color.toLowerCase())?.name || color}</span>
                     <button type='button' onClick={() => setProductData(prev => ({ ...prev, colors: prev.colors.filter((_, i) => i !== index) }))} className='text-red-500 hover:text-red-700 text-xs'>✕</button>
                   </div>
                 ))}
