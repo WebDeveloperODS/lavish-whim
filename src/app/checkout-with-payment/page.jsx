@@ -10,6 +10,7 @@ import { FaDoorOpen, FaWhatsapp } from "react-icons/fa";
 import { Trash2Icon } from "lucide-react";
 import SectionHead1 from "app/ui/components/main-heading";
 import Link from "next/link";
+import { colors } from "app/lib/colors";
 
 export default function Page(){
       const dispatch = useDispatch();
@@ -42,6 +43,7 @@ export default function Page(){
                         title: product.title,
                         image: product.images[0],
                         price: product.price,
+                        colour: item.colour,
                         discountedPrice: product.onSale === "true" ? product.salePrice : null,
                         discounted: product.onSale === "true"
                   };
@@ -137,7 +139,7 @@ export default function Page(){
                                     customerCart.map((item, index) => (
                                           <div key={index} className="flex items-center gap-3 bg-gray-50 shadow-md p-3 rounded-lg">
 
-                                                <div className="relative w-20 h-20 flex-shrink-0">
+                                                <div className="relative w-24 h-24 flex-shrink-0">
                                                 <Image
                                                       src={item.image}
                                                       alt={item.title}
@@ -148,19 +150,27 @@ export default function Page(){
                                                 </div>
 
                                                 <div className="flex-1">
-                                                <h4 className="font-medium text-sm line-clamp-2">{item.title}</h4>
+                                                <h4 className="font-semibold text-md line-clamp-2">{item.title}</h4>
 
-                                                <div className="text-sm flex gap-3 items-center">
-                                                      <h3>Qty:</h3>
-                                                      <MinusCircle
-                                                            className="w-4 h-4 cursor-pointer"
-                                                            onClick={() => dispatch(removeFromCart({ id: item.id }))}
-                                                      />
-                                                      <h3>{item.qty}</h3>
-                                                      <PlusCircle
-                                                            className="w-4 h-4 cursor-pointer"
-                                                            onClick={() => dispatch(increaseCountInCart({ id: item.id }))}
-                                                      />
+                                                <div className="flex items-center mt-2 gap-4">
+                                                      <div className='flex items-center border px-2 py-1 rounded-full gap-1 capitalize text-sm cursor-pointer'>
+                                                            {
+                                                                  colors.find(a => a.name.toLowerCase() === item.colour.toLowerCase()) ?  <div className={`w-4 h-4 border border-black rounded-full`} style={{backgroundColor: colors.find(a => a.name.toLowerCase() === item.colour.toLowerCase()).hex}}/> : null
+                                                            }
+                                                            <h4>{item.colour}</h4>
+                                                      </div>
+                                                      <div className="text-sm flex gap-3 items-center">
+                                                            <h3>Qty:</h3>
+                                                            <MinusCircle
+                                                                  className="w-4 h-4 cursor-pointer"
+                                                                  onClick={() => dispatch(removeFromCart({ id: item.id }))}
+                                                            />
+                                                            <h3>{item.qty}</h3>
+                                                            <PlusCircle
+                                                                  className="w-4 h-4 cursor-pointer"
+                                                                  onClick={() => dispatch(increaseCountInCart({ id: item.id }))}
+                                                            />
+                                                      </div>
                                                 </div>
 
                                                 <div className="flex flex-row justify-between items-center">

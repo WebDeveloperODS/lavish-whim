@@ -9,7 +9,7 @@ export async function POST(req){
             const customer = data.customer;
             const address = data.address;
             const payment = data.payment;
-            // console.log(products, customer, address)
+            console.log(products, customer, address)
             await executeQuery(`
                   CREATE TABLE IF NOT EXISTS orders (
                         order_id CHAR(36) NOT NULL DEFAULT(UUID()),
@@ -37,6 +37,7 @@ export async function POST(req){
                         order_id CHAR(36) NOT NULL,
                         product_id TEXT NOT NULL,
                         title TEXT NOT NULL,
+                        colour TEXT NOT NULL,
                         image TEXT,
                         qty INT NOT NULL,
                         price TEXT NOT NULL,
@@ -53,17 +54,18 @@ export async function POST(req){
                   orderId,
                   p.id,
                   p.title,
+                  p.colour,
                   p.image,
                   p.qty,
                   p.price,
                   p.discounted,
                   p.discountedPrice ?? "0"
             ])
-            const placeholders = values.map(() => "(?,?,?,?,?,?,?,?)").join(",")
+            const placeholders = values.map(() => "(?,?,?,?,?,?,?,?,?)").join(",")
 
             const resp = await executeQuery(
             `INSERT INTO ordered_products 
-            (order_id,product_id,title,image,qty,price,discounted,discounted_price) 
+            (order_id,product_id,title,colour,image,qty,price,discounted,discounted_price) 
             VALUES ${placeholders}`,
             values.flat()
             )

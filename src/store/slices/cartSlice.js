@@ -7,6 +7,7 @@ const item={
   price: 0,
   onSale: '',
   salePrice: 0,
+  colour: ''
 }
 
 const initialState = {
@@ -18,7 +19,7 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart(state, action) {
-      const exists = state.items.find(i => i.id === action.payload.id);
+      const exists = state.items.find(i => i.id === action.payload.id && String(i.colour).toLowerCase() === action.payload.colour);
       if (exists) {
         exists.qty += action.payload.qty;
       } else {
@@ -26,16 +27,16 @@ const cartSlice = createSlice({
       }
     },
     removeFromCart(state, action) {
-      console.log(action.payload.id);
-      state.items = state.items.filter(i => i.id === action.payload.id && i.qty > 1 ? (i.qty -= 1) : i.id !== action.payload.id); ;
+      console.log(action.payload);
+      state.items = state.items.filter(i => i.id === action.payload.id && String(i.colour).toLowerCase() === action.payload.colour.toLowerCase() && i.qty > 1 ? (i.qty -= 1) : i.qty); ;
     },
     removeAllCountFromCart(state, action) {
-      console.log(action.payload.id);
-      state.items = state.items.filter(i => i.id !== action.payload.id); ;
+      console.log(action.payload);
+      state.items = state.items.filter(i => i.id !== action.payload.id || String(i.colour).toLowerCase() !== action.payload.colour.toLowerCase()); ;
     },
     increaseCountInCart(state, action) {
-      console.log(action.payload.id);
-      state.items = state.items.filter(i => i.id === action.payload.id ? (i.qty += 1): i.qty)
+      console.log(action.payload);
+      state.items = state.items.filter(i => i.id === action.payload.id && String(i.colour).toLowerCase() === action.payload.colour.toLowerCase() ? (i.qty += 1): i.qty)
     },
     clearCart(state) {
       state.items = [];

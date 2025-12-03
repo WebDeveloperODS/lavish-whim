@@ -25,6 +25,7 @@ export const colors = [
       { name: "Crimson", hex: "#DC143C" },
       { name: "Rose Red", hex: "#C21E56" },
       { name: "Brick Red", hex: "#CB4154" },
+      { name: "Rose gold", hex: "#b76e79" },
 
       // Yellows
       { name: "Yellow", hex: "#FFFF00" },
@@ -32,6 +33,7 @@ export const colors = [
       { name: "Golden Yellow", hex: "#FFDF00" },
       { name: "Mustard Yellow", hex: "#FFDB58" },
       { name: "Lemon Yellow", hex: "#FFF44F" },
+      { name: "Golden", hex: "#d49a06" },
 
       // Purples
       { name: "Purple", hex: "#800080" },
@@ -64,6 +66,7 @@ export const colors = [
       { name: "Dark Gray", hex: "#A9A9A9" },
       { name: "Slate Gray", hex: "#708090" },
       { name: "Charcoal", hex: "#36454F" },
+      { name: "Silver", hex: "#d3d3d3" },
 
       // Pinks
       { name: "Pink", hex: "#FFC0CB" },

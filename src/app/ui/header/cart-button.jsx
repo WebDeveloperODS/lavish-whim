@@ -7,6 +7,7 @@ import products from '/public/content/products.json';
 import { useState, useEffect } from 'react';
 import { removeFromCart,increaseCountInCart, removeAllCountFromCart } from '@/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
+import { colors } from 'app/lib/colors';
 
 const CartSideView = ({ setShowCart, showCart }) => {
       const cartItems = useSelector((state) => state.cart.items);
@@ -26,7 +27,7 @@ const CartSideView = ({ setShowCart, showCart }) => {
                   const product = products.find((p) => p.product_id === item.id);
                   if (!product) 
                         return null;
-                  console.log(product)
+                  console.log('Product in cart: ',item)
                   return {
                         ...item,
                         title: product.title,
@@ -78,23 +79,31 @@ const CartSideView = ({ setShowCart, showCart }) => {
                               src={item.image}
                               alt={item.title}
                               fill
-                              className="object-cover rounded-md"
+                              className="object-cover h-full w-auto rounded-md"
                               sizes="80px"
                               />
                         </div>
-                        <div className="flex-1">
+                        <div className="flex flex-col w-full gap-1">
                               <h4 className="font-medium text-sm line-clamp-2">{item.title}</h4>
-                              <div className="text-sm flex gap-3 items-center">
-                                    <h3>Qty: </h3>
-                                    <MinusCircle className='w-4 h-4 ' onClick={() => dispatch(removeFromCart({id: item.id}))}/> 
-                                    <h3>{item.qty}</h3> 
-                                    <PlusCircle className='w-4 h-4' onClick={() => dispatch(increaseCountInCart({id: item.id}))}/>
+                              <div className='flex flex-col lg:flex-row justify-between lg:items-center'>
+                                    <div className='flex items-center border px-2 py-1 rounded-full gap-1 capitalize text-xs cursor-pointer'>
+                                          {
+                                                colors.find(a => a.name.toLowerCase() === item.colour.toLowerCase()) ?  <div className={`w-4 h-4 border border-black rounded-full`} style={{backgroundColor: colors.find(a => a.name.toLowerCase() === item.colour.toLowerCase()).hex}}/> : null
+                                          }
+                                          <h4>{item.colour}</h4>
+                                    </div>
+                                    <div className="text-sm flex gap-3 items-center">
+                                          <h3>Qty: </h3>
+                                          <MinusCircle className='w-4 h-4 ' onClick={() => dispatch(removeFromCart({id: item.id, colour: item.colour}))}/> 
+                                          <h3>{item.qty}</h3> 
+                                          <PlusCircle className='w-4 h-4' onClick={() => dispatch(increaseCountInCart({id: item.id, colour: item.colour}))}/>
+                                    </div>
                               </div>
                               <div className='flex flex-col lg:flex-row justify-between lg:items-center'>
                                     <p className="font-semibold text-sm">
                                           Rs. {(item.price * item.qty).toLocaleString('en-PK')} PKR
                                     </p>
-                                    <button onClick={() => dispatch(removeAllCountFromCart({id: item.id}))} className='text-red-600 text-sm underline'>Delete from cart</button>
+                                    <button onClick={() => dispatch(removeAllCountFromCart({id: item.id, colour: item.colour}))} className='text-red-600 text-sm underline'>Delete from cart</button>
                               </div>
                         </div>
                   </div>

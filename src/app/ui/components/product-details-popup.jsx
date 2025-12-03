@@ -9,13 +9,16 @@ import { LoaderCircle } from 'lucide-react';
 import { PiWalletDuotone } from "react-icons/pi";
 import { useRouter } from 'next/navigation';
 import { addToCart } from '@/store/slices/cartSlice';
+import { colors } from 'app/lib/colors';
 
 export default function ProductDetailsPopUp({ product }) {
       const dispatch = useDispatch()
       const [showPop, setShowPop] = useState(false); 
       const [activeImgIndex, setActiveImgIndex] = useState(0);
       const [quantity, setQuantity] = useState(1);
+      const [selectedColour, setSelectedColour] = useState('');
       const [additionStatus, setAdditionStatus] = useState('idle') 
+      const [showAlert, setShowAlert] = useState(false) 
       const modalRef = useRef(null);
       const router = useRouter()
       useEffect(() => { 
@@ -38,11 +41,28 @@ export default function ProductDetailsPopUp({ product }) {
             setActiveImgIndex(0); 
       };
       const directPurchase = () => {
-            dispatch(addToCart({id: product.product_id, title: product.title, price: product.onSale ? product.salePrice : product.price, qty: quantity}))
-            setShowPop(false)
-            router.replace('/checkout-with-payment')
+            if(selectedColour !==''){
+                  dispatch(addToCart({id: product.product_id, title: product.title, price: product.onSale ? product.salePrice : product.price, qty: quantity, colour: selectedColour}))
+                  setShowPop(false)
+                  router.replace('/checkout-with-payment')
+            }else{
+                  setShowAlert(false)
+            }
       }
       
+      const addToCartFunc = () => {
+            if(selectedColour !==''){
+                  setAdditionStatus('adding')
+                  dispatch(addToCart({id: product.product_id, title:product.title, price: product.onSale === 'true' ? product.salePrice : product.price, qty:quantity, colour: selectedColour }))
+                  setTimeout(() => setAdditionStatus('added'), 1000)
+                  setTimeout(() => setAdditionStatus('idle'), 2000)
+                  setQuantity(1)
+                  
+            }else{
+                  setShowAlert(true)
+            }
+      }
+
       const parseDescription = (html) => ({ __html: html?.replace(/<p><br><\/p>/g, '').replace(/&nbsp;/g, ' ') || '' });
 
       return (
@@ -50,12 +70,12 @@ export default function ProductDetailsPopUp({ product }) {
       <button onClick={openModal} className="text-sm lg:text-md w-full border border-black text-black font-semibold capitalize p-2 rounded-sm transition-all duration-300 hover:scale-[1.03] hover:bg-black hover:text-white">Let's Order It</button>
       {showPop && (
             <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 lg:bg-black/60 p-4 transition-opacity duration-300" onClick={handleBackdropClick}>
-                  <div ref={modalRef} className="relative w-full max-w-5xl h-[90vh] lg:h-[41em] lg:max-h-[41em] bg-white rounded-xl shadow-2xl overflow-auto lg:overflow-hidden animate-in fade-in zoom-in duration-300" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
+                  <div ref={modalRef} className="relative w-full max-w-5xl h-[90vh] lg:h-[42em] lg:max-h-[42em] bg-white rounded-xl shadow-2xl overflow-auto lg:overflow-hidden animate-in fade-in zoom-in duration-300" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
                         <button onClick={() => setShowPop(false)} className="absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 backdrop-blur-sm transition hover:bg-white hover:scale-110" aria-label="Close modal">
                               <X className="h-5 w-5" />
                         </button>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 lg:h-[41em] lg:max-h-[41em] lg:overflow-hidden">
-                              <div className="flex flex-col lg:h-[41em]">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 lg:h-[42em] lg:max-h-[42em] lg:overflow-hidden">
+                              <div className="flex flex-col lg:h-[42em]">
                                     <div className="relative h-96 lg:h-[80%] overflow-hidden lg:max-h-[80%] bg-gray-50">
                                           <Image src={product.images[activeImgIndex]} alt={`${product.title} - view ${activeImgIndex + 1}`} height={500} width={500} className="w-full h-[100%] object-fit object-center" sizes="(max-width: 768px) 100vw, 50vw" priority={activeImgIndex === 0} />
                                     </div>
@@ -67,7 +87,7 @@ export default function ProductDetailsPopUp({ product }) {
                                           ))}
                                     </div>
                               </div>
-                              <div className="flex flex-col gap-3 lg:gap-6 p-6 md:p-8 h-full lg:max-h-[41em]">
+                              <div className="flex flex-col gap-3 lg:gap-6 p-6 md:p-8 h-full lg:max-h-[42em]">
                                     <div>
                                           <h1 id="product-modal-title" className="text-xl lg:text-3xl font-bold capitalize">{product.title}</h1>
                                           <div className="lg:mt-3 flex items-center gap-3">
@@ -78,19 +98,31 @@ export default function ProductDetailsPopUp({ product }) {
                                     <div className={`h-[70%] lg:overflow-auto`}>
                                           {product.description && <div className=" prose-sm max-w-none text-sm lg:text-md text-gray-700" dangerouslySetInnerHTML={parseDescription(product.description)} />}
                                     </div>
-                                    <div className="mt-6 grid grid-cols-[15%_85%] gap-3">
+                                    <div className='relative grid grid-cols-4 gap-1 flex-wrap items-center'>
+                                          <div className='col-span-full flex items-center justify-between'>
+                                          <h3 className='text-sm font-bold capitalize'>Colour options:</h3>
+                                                {
+                                                      showAlert === true ? <h3 className='font-bold text-red-600 capitalize text-sm tracking-wide'>Select colour!!!</h3>:null
+                                                }
+                                          </div>
+                                          {
+                                                product.colors.map((c,index) => <div onClick={() => {setSelectedColour(c); setShowAlert(false)}} className={`flex items-center border px-2 py-1 rounded-full gap-1 capitalize text-xs cursor-pointer ${selectedColour === c ? 'border-black font-bold' : ''}`} key={index}>
+                                                      {
+                                                            colors.find(a => a.name.toLowerCase() === c.toLowerCase()) ?  <div className={`w-4 h-4 border border-black rounded-full`} style={{backgroundColor: colors.find(a => a.name.toLowerCase() === c.toLowerCase()).hex}}/> : null
+                                                      }
+                                                      <h4>{c}</h4>
+                                                </div>)
+                                          }
+                                    </div>
+
+                                    <div className="grid grid-cols-[15%_85%] gap-3">
                                           <div className='grid grid-rows-[25%_50%_25%] align-center items-center'>
                                                 <button className='text-xl bg-black text-white w-full h-full font-semibold'  onClick={() => quantity > 1 && setQuantity(quantity-1)}>-</button>
                                                 <h3 className='text-center border h-full w-full flex justify-center items-center'>{quantity}</h3>
                                                 <button className='text-lg leading-tight bg-black text-white w-full h-full font-semibold' onClick={() => setQuantity(quantity+1)}>+</button>
                                           </div>
                                           <div className='flex flex-col gap-3'>
-                                                <button onClick={() => {
-                                                      setAdditionStatus('adding')
-                                                      dispatch(addToCart({id: product.product_id, title:product.title, price: product.onSale ? product.salePrice : product.price, qty:quantity }))
-                                                      setTimeout(() => setAdditionStatus('added'), 1000)
-                                                      setTimeout(() => setAdditionStatus('idle'), 2000)
-                                                      }} 
+                                                <button onClick={addToCartFunc} 
                                                       className={`w-full inline-flex gap-3 text-sm lg:text-md items-center justify-center text-white font-semibold py-3 rounded-md transition ${
                                                             additionStatus === 'adding' ? "bg-gray-800 cursor-not-allowed" : additionStatus === 'added' ? 'bg-green-700': 'bg-black hover:bg-gray-800'
                                                       } capitalize`}>
