@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import ProductDetailsPopUp from './product-details-popup';
+import { event } from 'app/lib/facebook-pixels';
 
 function formatPKR(num) {
   return new Intl.NumberFormat('en-PK', { style: 'decimal', minimumFractionDigits: 0 }).format(num);
@@ -9,6 +10,7 @@ function formatPKR(num) {
 
 export default function ProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [openPop, setOpenPop] = useState(false);
   const hasHoverImg = product.images[1] !== undefined;
   const defaultImg = product.images[0];
   const hoverImg = product.images[1] ?? defaultImg;
@@ -24,6 +26,10 @@ export default function ProductCard({ product }) {
           src={isHovered && hasHoverImg ? hoverImg : defaultImg}
           alt={product.title}
           fill
+          onClick={() => {event("Product viewed", {
+            product: product.title,
+            product_id: product.id
+          });setOpenPop(true)}}
           className="object-cover object-center transition-transform duration-300 hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
@@ -35,7 +41,10 @@ export default function ProductCard({ product }) {
       </div>
 
       <div className="flex flex-col justify-between flex-grow p-4 gap-3">
-        <h3 className="lg:line-clamp-2 text-md lg:text-lg font-bold capitalize lg:tracking-wide hover:underline cursor-pointer">
+        <h3 onClick={() => {event("Product viewed", {
+          product: product.title,
+          product_id: product.id
+        });setOpenPop(true)}} className="lg:line-clamp-2 text-md lg:text-lg font-bold capitalize lg:tracking-wide hover:underline cursor-pointer">
           {product.title}
         </h3>
 
@@ -56,7 +65,7 @@ export default function ProductCard({ product }) {
               </span>
             )}
           </div>
-          <ProductDetailsPopUp product={product} />
+          <ProductDetailsPopUp product={product} openCall={openPop} setOpenCall={setOpenPop}/>
         </div>
       </div>
     </div>

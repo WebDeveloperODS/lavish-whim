@@ -10,8 +10,9 @@ import { PiWalletDuotone } from "react-icons/pi";
 import { useRouter } from 'next/navigation';
 import { addToCart } from '@/store/slices/cartSlice';
 import { colors } from 'app/lib/colors';
+import { event } from 'app/lib/facebook-pixels';
 
-export default function ProductDetailsPopUp({ product }) {
+export default function ProductDetailsPopUp({ product, openCall, setOpenCall }) {
       const dispatch = useDispatch()
       const [showPop, setShowPop] = useState(false); 
       const [activeImgIndex, setActiveImgIndex] = useState(0);
@@ -32,6 +33,14 @@ export default function ProductDetailsPopUp({ product }) {
             } 
             return () => { window.removeEventListener('keydown', handleEsc); document.body.style.overflow = 'unset'; }; 
       }, [showPop]);
+
+      useEffect(() => {
+            if(openCall){
+                  setShowPop(true)
+            }else{
+                  setShowPop(false)
+            }
+      },[openCall])
       const handleBackdropClick = (e) => { 
             if (modalRef.current && !modalRef.current.contains(e.target)) 
                   setShowPop(false); 
@@ -42,6 +51,10 @@ export default function ProductDetailsPopUp({ product }) {
       };
       const directPurchase = () => {
             if(selectedColour !==''){
+                  event('Direct purchase', {
+                        product: product.title,
+                        product_id: product.product_id
+                  })
                   dispatch(addToCart({id: product.product_id, title: product.title, price: product.onSale ? product.salePrice : product.price, qty: quantity, colour: selectedColour}))
                   setShowPop(false)
                   router.replace('/checkout-with-payment')
@@ -53,6 +66,10 @@ export default function ProductDetailsPopUp({ product }) {
       const addToCartFunc = () => {
             if(selectedColour !==''){
                   setAdditionStatus('adding')
+                  event("Added product in cart", {
+                        product: product.title,
+                        product_id: product.product_id
+                  })
                   dispatch(addToCart({id: product.product_id, title:product.title, price: product.onSale === 'true' ? product.salePrice : product.price, qty:quantity, colour: selectedColour }))
                   setTimeout(() => setAdditionStatus('added'), 1000)
                   setTimeout(() => setAdditionStatus('idle'), 2000)
@@ -67,12 +84,15 @@ export default function ProductDetailsPopUp({ product }) {
 
       return (
       <>
-      <button onClick={openModal} className="text-sm lg:text-md w-full border border-black text-black font-semibold capitalize p-2 rounded-sm transition-all duration-300 hover:scale-[1.03] hover:bg-black hover:text-white">Let's Order It</button>
+      <button onClick={() => {event("Product viewed", {
+          product: product.title,
+          product_id: product.id
+        });openModal()}} className="text-sm lg:text-md w-full border border-black text-black font-semibold capitalize p-2 rounded-sm transition-all duration-300 hover:scale-[1.03] hover:bg-black hover:text-white">Let's Order It</button>
       {showPop && (
             <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 lg:bg-black/60 p-4 transition-opacity duration-300" onClick={handleBackdropClick}>
-                  <div ref={modalRef} className="relative w-full max-w-5xl h-[90vh] lg:h-[42em] lg:max-h-[42em] bg-white rounded-xl shadow-2xl overflow-auto lg:overflow-hidden animate-in fade-in zoom-in duration-300" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
-                        <button onClick={() => setShowPop(false)} className="absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 backdrop-blur-sm transition hover:bg-white hover:scale-110" aria-label="Close modal">
-                              <X className="h-5 w-5" />
+                  <div ref={modalRef} className="relative w-full max-w-5xl h-[96vh] lg:h-[42em] lg:max-h-[42em] bg-white rounded-xl shadow-2xl overflow-auto lg:overflow-hidden animate-in fade-in zoom-in duration-300" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
+                        <button onClick={() => {setShowPop(false); setOpenCall(false)}} className="absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 backdrop-blur-sm transition hover:bg-white hover:scale-110" aria-label="Close modal">
+                              <X className="h-4 w-4 lg:h-5 lg:w-5" />
                         </button>
                         <div className="grid grid-cols-1 lg:grid-cols-2 lg:h-[42em] lg:max-h-[42em] lg:overflow-hidden">
                               <div className="flex flex-col lg:h-[42em]">
@@ -87,7 +107,7 @@ export default function ProductDetailsPopUp({ product }) {
                                           ))}
                                     </div>
                               </div>
-                              <div className="flex flex-col gap-3 lg:gap-6 p-6 md:p-8 h-full lg:max-h-[42em]">
+                              <div className="flex flex-col gap-5 lg:gap-6 p-6 md:p-8 h-full lg:max-h-[42em]">
                                     <div>
                                           <h1 id="product-modal-title" className="text-xl lg:text-3xl font-bold capitalize">{product.title}</h1>
                                           <div className="lg:mt-3 flex items-center gap-3">
@@ -95,12 +115,12 @@ export default function ProductDetailsPopUp({ product }) {
                                                 {product.onSale === 'true' && <div className="inline-block px-4 py-1 bg-red-600 text-white text-xs font-bold uppercase rounded-full">Sale</div>}
                                           </div>
                                     </div>
-                                    <div className={`h-[70%] lg:overflow-auto`}>
+                                    <div className={`lg:h-[70%] lg:overflow-auto`}>
                                           {product.description && <div className=" prose-sm max-w-none text-sm lg:text-md text-gray-700" dangerouslySetInnerHTML={parseDescription(product.description)} />}
                                     </div>
-                                    <div className='relative grid grid-cols-4 gap-1 flex-wrap items-center'>
-                                          <div className='col-span-full flex items-center justify-between'>
-                                          <h3 className='text-sm font-bold capitalize'>Colour options:</h3>
+                                    <div className='relative flex lg:grid lg:grid-cols-4 gap-1 flex-wrap items-center'>
+                                          <div className='w-full lg:col-span-full flex items-center justify-between'>
+                                                <h3 className='text-sm font-bold capitalize'>Colour options:</h3>
                                                 {
                                                       showAlert === true ? <h3 className='font-bold text-red-600 capitalize text-sm tracking-wide'>Select colour!!!</h3>:null
                                                 }

@@ -28,20 +28,42 @@ const ProductStatus = ({productId, status,reload}) => {
             </div>
       )
 }
+const SetBestSelling = ({productId, bestSelling,reload}) => {
+      const updateSelling = async () => {
+            let newSelling = bestSelling === 'true' ? 'false' : 'true'
+            const response = await fetch('/api/json-data/updation-of-product/bestselling-update',{
+                  method: 'PUT',
+                  body: JSON.stringify({product_id: productId, bestSelling:newSelling})
+            })
+            const output = await response.json()
+            if(output.status === 200){
+                  reload(true)
+            }
+      }
+      return(
+            <div onClick={updateSelling} className='flex items-center gap-2 cursor-pointer'> 
+                  <h3 className=''>Yes</h3> 
+                  <div className={`w-8 h-4 p-1 flex items-center ${bestSelling === 'true' ? 'justify-start bg-green-600/60':'justify-end bg-neutral-200'} rounded-full border-2 border-black`}>
+                        <div className={`w-2 h-2 bg-black rounded-full`}/>
+                  </div> 
+                  <h3 className=''>No</h3>
+            </div>
+      )
+}
 
 export default function DetailsCard({ product, callReload }) {
       const defaultImg = product.images[0];
 
       return (
       <div className="grid grid-cols-[12%_88%] min-h-32 p-2 border rounded-sm shadow-sm ">
-            <div className="relative h-full w-full cursor-pointer overflow-hidden">
-                  <Image src={defaultImg} alt={product.title} fill className="object-cover object-center transition-transform duration-300 hover:scale-105"/>
+            <div className="relative h-full w-full overflow-hidden">
+                  <Image src={defaultImg} alt={product.title} fill className="object-cover object-center"/>
             </div>
 
             <div className="flex flex-col items-start p-2 gap-1">
-                  <h3 className="w-fit text-sm lg:text-lg font-bold capitalize lg:tracking-wide hover:underline cursor-pointer">
+                  <Link href={`/portal/dashboard/products-list/${product.product_id}`} className="w-fit text-sm lg:text-lg font-bold capitalize lg:tracking-wide hover:underline cursor-pointer">
                         {product.title}
-                  </h3>
+                  </Link>
                   <div className="grid grid-cols-3 gap-x-8 gap-y-2 flex-wrap w-full">
                         <div className='flex text-sm gap-2'>
                               <h3 className='font-bold'>Price: </h3>
@@ -57,7 +79,7 @@ export default function DetailsCard({ product, callReload }) {
                         </div>
                         <div className='flex text-sm gap-2'>
                               <h3 className='font-bold'>Best Selling: </h3>
-                              <h3 className=''>{product.bestSelling === "true" ? 'Yes' : 'No'}</h3>
+                              <h3 className=''><SetBestSelling reload={callReload} productId={product.product_id} bestSelling={product.bestSelling}/></h3>
                         </div>
                         <div className='flex text-sm gap-2'>
                               <h3 className='font-bold'>On Sale: </h3>

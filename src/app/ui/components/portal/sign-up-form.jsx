@@ -63,7 +63,7 @@ const SignUpForm = () => {
             }
       }, [verifyPassword, userdata.password]);
       return (
-      <form onSubmit={handleNewUserCreation} className="w-[45vw] p-8 border border-neutral-200 shadow-md shadow-black/10 rounded-md grid grid-cols-2 gap-6 bg-white">
+      <form onSubmit={handleNewUserCreation} className="w-full p-8 border border-neutral-200 shadow-md shadow-black/10 rounded-md grid grid-cols-2 gap-6 bg-white">
             <h2 className="col-span-2 text-2xl font-bold text-center mb-4">Create Account</h2>
 
             <div className="flex flex-col gap-1">

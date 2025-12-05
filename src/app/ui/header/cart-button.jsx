@@ -74,25 +74,25 @@ const CartSideView = ({ setShowCart, showCart }) => {
             ) : (
                   cartDetails.map((item, index) => (
                   <div key={index} className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg">
-                        <div className="relative w-20 h-20 flex-shrink-0">
+                        <div className="relative w-20 h-28 lg:h-20 flex-shrink-0">
                               <Image
-                              src={item.image}
-                              alt={item.title}
-                              fill
-                              className="object-cover h-full w-auto rounded-md"
-                              sizes="80px"
+                                    src={item.image}
+                                    alt={item.title}
+                                    fill
+                                    className="object-cover h-full w-auto rounded-md"
+                                    sizes="80px"
                               />
                         </div>
                         <div className="flex flex-col w-full gap-1">
                               <h4 className="font-medium text-sm line-clamp-2">{item.title}</h4>
-                              <div className='flex flex-col lg:flex-row justify-between lg:items-center'>
+                              <div className='flex flex-row justify-between lg:items-center'>
                                     <div className='flex items-center border px-2 py-1 rounded-full gap-1 capitalize text-xs cursor-pointer'>
                                           {
                                                 colors.find(a => a.name.toLowerCase() === item.colour.toLowerCase()) ?  <div className={`w-4 h-4 border border-black rounded-full`} style={{backgroundColor: colors.find(a => a.name.toLowerCase() === item.colour.toLowerCase()).hex}}/> : null
                                           }
                                           <h4>{item.colour}</h4>
                                     </div>
-                                    <div className="text-sm flex gap-3 items-center">
+                                    <div className="text-xs lg:text-sm flex gap-3 items-center">
                                           <h3>Qty: </h3>
                                           <MinusCircle className='w-4 h-4 ' onClick={() => dispatch(removeFromCart({id: item.id, colour: item.colour}))}/> 
                                           <h3>{item.qty}</h3> 

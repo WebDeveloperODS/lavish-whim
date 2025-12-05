@@ -11,12 +11,14 @@ import { Trash2Icon } from "lucide-react";
 import SectionHead1 from "app/ui/components/main-heading";
 import Link from "next/link";
 import { colors } from "app/lib/colors";
+import { CheckCircle2 } from "lucide-react";
 
 export default function Page(){
       const dispatch = useDispatch();
       const cartItems = useSelector((state) => state.cart.items);
       const [customerCart, setCustomerCart] = useState([]);
       const [displayMsg, setDisplayMsg] = useState(false);
+      const [discountCoupon, setDiscountCoupon] = useState('');
       const [paymentOption,setPaymentOption] = useState('Cash on delivery')
       const [paymentStatus,setPaymentStatus] = useState('waiting')
       const [customer, setCustomer] = useState({
@@ -209,6 +211,11 @@ export default function Page(){
 
                         <div className="lg:border-l lg:pl-6 ">
                               <div className="flex flex-col gap-3 text-sm">
+                                    <h2 className="font-bold text-lg xl:text-xl">Coupon Code</h2>
+                                    <div className="grid grid-cols-[90%_10%] border-2 border-black rounded-lg">
+                                          <input className="rounded-lg p-2" placeholder="Coupon..." name="discountCoupon" id="discountCoupon" value={discountCoupon} onChange={(e) => setDiscountCoupon(e.target.value)}/> 
+                                          <CheckCircle2 className="mx-auto my-auto"/>
+                                    </div>
                                     <h2 className="font-bold text-lg xl:text-xl">Order Summary</h2>
                                     <div className="flex justify-between">
                                           <span>Subtotal</span>
@@ -217,6 +224,11 @@ export default function Page(){
 
                                     <div className="flex justify-between">
                                           <span>Shipping</span>
+                                          <span>Free</span>
+                                    </div>
+                                    
+                                    <div className="flex justify-between">
+                                          <span>Coupon</span>
                                           <span>Free</span>
                                     </div>
 

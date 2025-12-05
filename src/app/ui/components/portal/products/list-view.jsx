@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import DetailsCard from './details-card';
 
-export default function ListView({ countFunc, selectedCategory }) {
+export default function ListView({ countFunc, productsFilter, searchContent,selectedCategory }) {
       const [reload, setReload] = useState(false)          
       const [products, setProducts] = useState([]);
       async function loadProducts() {
@@ -19,9 +19,41 @@ export default function ListView({ countFunc, selectedCategory }) {
       useEffect(() => {
             loadProducts();
       }, []);
+      const byProductFilter = (product) => {
+            if (!productsFilter) return true;
 
-      const filteredProducts = selectedCategory ? products.sort((a, b) => new Date(b.dated) - new Date(a.dated)).filter( (p) => p.type?.toLowerCase() === selectedCategory.toLowerCase()) : products.sort((a, b) => new Date(b.dated) - new Date(a.dated));
+            switch (productsFilter) {
+                  case "best-selling-yes":
+                        return product.bestSelling === 'true';
+                  case "best-selling-no":
+                        return product.bestSelling === 'false';
+      
+                  case "status-live":
+                        return product.status === 'live';
+                  case "status-not-live":
+                        return product.status === 'not-live';
+      
+                  case "with-discount":
+                        return product.onSale ==='true';
+                  case "with-no-discount":
+                        return product.onSale ==='false';
+      
+                  default:
+                        return true;
+            }
+      };
+      const byCategory = (product) => {
+            if (!selectedCategory) return true;   // No category selected → show all
+            return product.type?.toLowerCase() === selectedCategory.toLowerCase();
+      };
+      const bySearchContent = (product) => {
+            if (!searchContent) return true;   // No category selected → show all
+            return product.title?.toLowerCase().includes(searchContent.toLowerCase());
+      };
+      const filteredProducts = products.sort((a, b) => new Date(b.dated) - new Date(a.dated)).filter(bySearchContent).filter(byCategory).filter(byProductFilter);
       countFunc(filteredProducts.length)
+
+      
 
       useEffect(() => {
             if(reload === true){

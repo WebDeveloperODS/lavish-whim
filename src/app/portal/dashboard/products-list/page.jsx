@@ -6,7 +6,7 @@ import { useState } from "react";
 export default function Page(){
       const [category, setCategory] = useState('');
       const [status, setStatus] = useState('');
-      const [saleStatus, setSaleStatus] = useState('');
+      const [search, setSearch] = useState('');
       const [productsCount, setProductsCount] = useState(0)
       return(
             <div className="max-w-full">
@@ -14,15 +14,20 @@ export default function Page(){
                         <SectionHead2 className={'relative font-bold tracking-wide underline underline-offset-3 decoration-2 decoration-red-700'}>All Listed Products <span className="absolute -right-16 font-semibold text-xs bottom-1">Items: {productsCount}</span></SectionHead2>
                         <div className="flex items-center gap-3">
                               
-                              <select name="saleStatus" value={saleStatus} className="px-2 py-1 rounded-full text-sm bg-gray-100" onChange={(e)  => setSaleStatus(e.target.value)}>
+                              {/* <select name="saleStatus" value={saleStatus} className="px-2 py-1 rounded-full text-sm bg-gray-100" onChange={(e)  => setSaleStatus(e.target.value)}>
                                     <option value=''>Sale Status</option>
                                     <option value='true'>Yes</option>
                                     <option value='false'>No</option>
-                              </select>
-                              <select name="status" value={status} className="w-[100px] px-2 py-1 rounded-full text-sm bg-gray-100" onChange={(e)  => setStatus(e.target.value)}>
-                                    <option value=''>Status</option>
-                                    <option value='live'>Live</option>
-                                    <option value='not-live'>Not live</option>
+                              </select> */}
+                              <input type="text" name='search' id="search" placeholder="Search..." className="w-fit px-2 py-1 rounded-full text-sm bg-gray-50 border border-black/60" value={search} onChange={(e) => setSearch(e.target.value)}/>
+                              <select name="status" value={status} className="w-fit px-2 py-1 rounded-full text-sm bg-gray-100" onChange={(e)  => setStatus(e.target.value)}>
+                                    <option value=''>Filter products</option>
+                                    <option value='best-selling-yes'>Best selling - yes</option>
+                                    <option value='best-selling-no'>Best selling - no</option>
+                                    <option value='status-live'>Live products</option>
+                                    <option value='status-not-live'>Not live products</option>
+                                    <option value='with-discount'>With Discount</option>
+                                    <option value='with-no-discount'>With No Discount</option>
                               </select>
                               <select name="category" value={category} className="px-2 py-1 rounded-full text-sm bg-gray-100" onChange={(e)  => setCategory(e.target.value)}>
                                     <option value=''>All Categories</option>
@@ -35,7 +40,7 @@ export default function Page(){
                               </select>
                         </div>
                   </div>
-                  <ListView countFunc={setProductsCount} selectedCategory={category}/>
+                  <ListView countFunc={setProductsCount} productsFilter={status} searchContent={search} selectedCategory={category}/>
             </div>
       )
 }

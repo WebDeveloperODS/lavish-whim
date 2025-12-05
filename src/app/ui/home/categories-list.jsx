@@ -14,7 +14,7 @@ export default function CategoriesList(){
                         {
                               bagsTypes.map((bag,index)=> <div className="flex lg:w-[15vw] flex-col items-center gap-3 border pb-3" key={index}>
                                     <div className="h-[16rem] lg:h-[21rem] w-full relative" onMouseEnter={() => setHoverCall(index)} onMouseLeave={() => setHoverCall(-1)}>
-                                          <Image className="w-full h-full object-center border-b object-cover" src={`${bag.image}`} width={500} height={500} alt={`${bag.title} - Bag - By Lavish Whim`} />
+                                          <Image className="w-full h-full object-center border-b object-cover" src={ window.innerWidth < 600 ? `${bag.image_m}`:`${bag.image}`} width={500} height={500} alt={`${bag.title} - Bag - By Lavish Whim`} />
                                           {
                                                 hoverCall === index ? <div className="absolute inset-0 z-10 top-0 left-0 w-full h-full flex items-center justify-center bg-black/40">
                                                       {
