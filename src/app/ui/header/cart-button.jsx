@@ -3,15 +3,13 @@ import { MinusCircle, PlusCircle, X } from 'lucide-react';
 import { TbShoppingBag } from 'react-icons/tb';
 import { useDispatch, useSelector } from 'react-redux';
 import Image from 'next/image';
-import products from '/public/content/products.json';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { removeFromCart,increaseCountInCart, removeAllCountFromCart } from '@/store/slices/cartSlice';
 import { useRouter } from 'next/navigation';
 import { colors } from 'app/lib/colors';
 
 const CartSideView = ({ setShowCart, showCart }) => {
       const cartItems = useSelector((state) => state.cart.items);
-      const [cartDetails, setCartDetails] = useState([]);
       const dispatch = useDispatch()
       const router = useRouter()
       
@@ -20,28 +18,7 @@ const CartSideView = ({ setShowCart, showCart }) => {
             setShowCart(false)
       }
 
-      // Map cart items to full product details
-      useEffect(() => {
-      if (cartItems.length > 0) {
-            const details = cartItems.map((item) => {
-                  const product = products.find((p) => p.product_id === item.id);
-                  if (!product) 
-                        return null;
-                  console.log('Product in cart: ',item)
-                  return {
-                        ...item,
-                        title: product.title,
-                        image: product.images[0],
-                        price: product.onSale === "true" ? product.salePrice : product.price,
-                  };
-            }).filter(Boolean);
-            setCartDetails(details);
-      } else {
-            setCartDetails([]);
-      }
-      }, [cartItems]);
-
-      const totalBill = cartDetails.reduce((sum, item) => sum + item.price * item.qty, 0);
+      const totalBill = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
 
       return (
       <div
@@ -69,10 +46,10 @@ const CartSideView = ({ setShowCart, showCart }) => {
 
             {/* Cart Items */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {cartDetails.length === 0 ? (
+            {cartItems.length === 0 ? (
                   <p className="text-center text-gray-500 py-8">Your cart is empty</p>
             ) : (
-                  cartDetails.map((item, index) => (
+                  cartItems.map((item, index) => (
                   <div key={index} className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg">
                         <div className="relative w-20 h-28 lg:h-20 flex-shrink-0">
                               <Image

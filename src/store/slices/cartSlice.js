@@ -7,7 +7,8 @@ const item={
   price: 0,
   onSale: '',
   salePrice: 0,
-  colour: ''
+  colour: '',
+  image:'',
 }
 
 const initialState = {
@@ -28,7 +29,7 @@ const cartSlice = createSlice({
     },
     removeFromCart(state, action) {
       console.log(action.payload);
-      state.items = state.items.filter(i => i.id === action.payload.id && String(i.colour).toLowerCase() === action.payload.colour.toLowerCase() && i.qty > 1 ? (i.qty -= 1) : i.qty); ;
+      state.items = state.items.filter(i => i.id === action.payload.id && String(i.colour).toLowerCase() === action.payload.colour.toLowerCase() && i.qty > 0 ? (i.qty -= 1) : i.qty); ;
     },
     removeAllCountFromCart(state, action) {
       console.log(action.payload);

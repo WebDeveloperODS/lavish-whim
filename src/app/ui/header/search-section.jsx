@@ -2,14 +2,23 @@
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
-import products from '../../../../public/content/products.json';
 import Image from "next/image";
 import { useRef } from "react";
 
 const SearchSection = () => {
       const [searchCall, setSearchCall] = useState(false)
       const [searchText, setSearchText] = useState('');
-      const [productsList, setProductsList] = useState(products);
+      const [productsList, setProductsList] = useState([]);
+      const [products, setProducts] = useState([]);
+      useEffect(() => {
+            const fetchProducts = async () => { 
+                  const res = await fetch('/api/database/products');
+                  const data = await res.json();
+                  setProducts(data);
+                  setProductsList(data);
+            }
+            fetchProducts();
+      }, [])    
       const searchRef = useRef(null)
       useEffect(()=> {
             let filtered = [...products];

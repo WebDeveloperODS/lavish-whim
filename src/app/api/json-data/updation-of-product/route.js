@@ -1,28 +1,29 @@
 import { NextResponse } from "next/server";
 import * as fs from "fs";
 import path from "path";
+import executeQuery from "app/lib/database";
 
 export async function PUT(req) {
   try {
     const data = await req.json();
     console.log(data)
-    
-    const filePath = path.join(process.cwd(), "public/content/products.json");
-
-    const fileData = fs.readFileSync(filePath, "utf-8");
-    const products = JSON.parse(fileData);
-
-    const productIndex = products.findIndex((p) => p.product_id === data.product_id);
-
-    if (productIndex === -1) {
-      return NextResponse.json(
-        { error: "Product not found" },
-        { status: 404 }
-      );
-    }
-
-    products[productIndex].status = data.status;
-    fs.writeFileSync(filePath, JSON.stringify(products, null, 2), "utf-8");
+    await executeQuery(
+      `UPDATE products SET title=?, price=?, category=?, type=?, colors=?, bestSelling=?, gender=?, description=?, onSale=?, salePrice=?, status=?, last_updated_on=NOW() WHERE product_id=?;`,
+      [
+        data.title, 
+        data.price,
+        data.category,
+        data.type,
+        JSON.stringify(data.colors),
+        data.bestSelling,
+        data.gender,
+        data.description,
+        data.onSale,  
+        data.salePrice,
+        data.status,
+        data.product_id,
+      ]
+    );
 
     return NextResponse.json({
       message: "Product status updated successfully",

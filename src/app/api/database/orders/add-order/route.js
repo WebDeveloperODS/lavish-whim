@@ -24,6 +24,8 @@ export async function POST(req){
                         zipCode TEXT,
                         subTotal TEXT,
                         discountTotal TEXT,
+                        coupon_code TEXT,
+                        couponDisc TEXT,
                         total TEXT,
                         payment_thru TEXT,
                         payment_status TEXT,
@@ -45,11 +47,37 @@ export async function POST(req){
                         discounted_price TEXT DEFAULT 0,
                         FOREIGN KEY (order_id) REFERENCES orders (order_id));
             `)
-            const response = await executeQuery('INSERT INTO orders (customerName,contactNo,email,gender,street,city,state,country,zipCode,dated,subTotal,discountTotal, total, payment_thru, payment_status) VALUES (?,?,?,?,?,?,?,?,?,NOW(),?,?,?,?,?);',
-                  [customer.fullname, customer.contact, customer.email, customer.gender, address.street, address.city, address.state, address.country, address.zipCode ?? '',payment.subTotal, payment.discountTotal, payment.total, payment.paymentThru, payment.paymentStatus]
-            )
-            const orderData = await executeQuery('SELECT order_id FROM orders WHERE dated=NOW() AND customerName=? AND contactNo=? AND email=?;',[customer.fullname, customer.contact, customer.email])
-            const orderId = orderData[0].order_id
+            const result = await executeQuery(
+                  `INSERT INTO orders 
+                  (customerName, contactNo, email, gender, street, city, state, country, zipCode, dated, subTotal, discountTotal, coupon_code, couponDisc, total, payment_thru, payment_status) 
+                  VALUES (?,?,?,?,?,?,?,?,?, NOW(),?,?,?,?,?,?,?)
+                  RETURNING order_id;`,
+                  [
+                  customer.fullname,
+                  customer.contact,
+                  customer.email,
+                  customer.gender,
+                  address.street,
+                  address.city,
+                  address.state,
+                  address.country,
+                  address.zipCode ?? '',
+                  payment.subTotal,
+                  payment.discountTotal,
+                  payment.coupon,
+                  payment.couponDisc,
+                  payment.total,
+                  payment.paymentThru,
+                  payment.paymentStatus
+                  ]
+            );
+
+                  // ✅ DIRECT order id
+            const orderId = result[0].order_id;
+
+            // const orderData = await executeQuery('SELECT order_id FROM orders WHERE dated=NOW() AND customerName=? AND contactNo=? AND email=?;',[customer.fullname, customer.contact, customer.email])
+            // console.log('Order data: ', orderData)
+            // const orderId = orderData[0].order_id
             const values = products.map(p => [
                   orderId,
                   p.id,
@@ -58,8 +86,8 @@ export async function POST(req){
                   p.image,
                   p.qty,
                   p.price,
-                  p.discounted,
-                  p.discountedPrice ?? "0"
+                  p.discounted ?? '',
+                  p.discountedPrice ?? '0'
             ])
             const placeholders = values.map(() => "(?,?,?,?,?,?,?,?,?)").join(",")
 
@@ -69,9 +97,8 @@ export async function POST(req){
             VALUES ${placeholders}`,
             values.flat()
             )
-            console.log(response)
-            console.log(resp)
-            if(resp && response){
+            // console.log(resp)
+            if(resp ){
                   return NextResponse.json({status: 200 , message: 'Successful'})
             }else{
                   return NextResponse.json({status: 302, message: 'Failed to add ordered products.'})

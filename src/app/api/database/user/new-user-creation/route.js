@@ -16,7 +16,7 @@ export async function POST(req){
                               contactNumber TEXT NOT NULL
                         );`)
             const response = await executeQuery(
-                  `INSERT INTO users (username, fullname, password, email, contactNumber) VALUES (?, ?, ?, ?, ?);`,
+                  `INSERT INTO users (username, fullname, password, email, contactNumber, usertype) VALUES (?, ?, ?, ?, ?,'simple-user');`,
                   [data.username, data.fullname, data.password, data.email, data.contactNumber]
             );
             console.log('User Created:', response);

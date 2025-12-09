@@ -96,8 +96,8 @@ export default function OrderDetails({order_id}){
                 <div className="grid grid-cols-2 border rounded-md mb-3">
                     <h3 className="py-2 px-4 border rounded-tl-md"><b>Ordered On:</b> {String(order?.dated).split('T')[0]}</h3>
                     <h3 className="py-2 px-4 border rounded-tr-md"><b>Sub Total:</b> {formatPKR(order?.subTotal)}</h3>
-                    <h3 className="py-2 px-4 border"><b>Discounted:</b> {formatPKR(order?.discountTotal)}</h3>
-                    <h3 className="py-2 px-4 border"><b>Discount Coupon:</b> </h3>
+                    <h3 className="py-2 px-4 border"><b>Discounted:</b> {formatPKR((Number(order?.discountTotal) + Number(order?.couponDisc)))}</h3>
+                    <h3 className="py-2 px-4 border"><b>Discount Coupon:</b> {order?.coupon_code ? order.coupon_code : '---'}</h3>
                     <h3 className="py-2 px-4 border"><b>Total Bill:</b> {formatPKR(order?.total)}</h3>
                     <h3 className="py-2 px-4 border"><b>Payment Through:</b> {order?.payment_thru}</h3>
                     <h3 className={updateCall ? "flex flex-wrap gap-2 items-center pl-4 border rounded-bl-md border-black" :"py-2 px-4 border rounded-bl-md capitalize"}><b>Payment Status:</b> {

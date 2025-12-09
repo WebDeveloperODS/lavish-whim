@@ -1,5 +1,4 @@
 'use client';
-
 import SectionHead1 from "app/ui/components/main-heading";
 import { signIn } from "next-auth/react";   // <- use next-auth/react on client
 import { useState } from "react";

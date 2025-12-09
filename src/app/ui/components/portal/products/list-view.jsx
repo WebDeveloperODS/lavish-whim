@@ -8,7 +8,7 @@ export default function ListView({ countFunc, productsFilter, searchContent,sele
       const [products, setProducts] = useState([]);
       async function loadProducts() {
             try {
-                  const res = await fetch(`/content/products.json`);
+                  const res = await fetch(`/api/database/products`,{cache: 'no-store'});
                   const data = await res.json();
                   setProducts(data);
                   // countFunc(data.length)
@@ -24,9 +24,9 @@ export default function ListView({ countFunc, productsFilter, searchContent,sele
 
             switch (productsFilter) {
                   case "best-selling-yes":
-                        return product.bestSelling === 'true';
+                        return product.bestSelling === 1;
                   case "best-selling-no":
-                        return product.bestSelling === 'false';
+                        return product.bestSelling === 0;
       
                   case "status-live":
                         return product.status === 'live';
@@ -34,9 +34,9 @@ export default function ListView({ countFunc, productsFilter, searchContent,sele
                         return product.status === 'not-live';
       
                   case "with-discount":
-                        return product.onSale ==='true';
+                        return product.onSale ===1;
                   case "with-no-discount":
-                        return product.onSale ==='false';
+                        return product.onSale ===0;
       
                   default:
                         return true;

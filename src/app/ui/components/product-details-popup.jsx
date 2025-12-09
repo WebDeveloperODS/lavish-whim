@@ -20,6 +20,7 @@ export default function ProductDetailsPopUp({ product, openCall, setOpenCall }) 
       const [selectedColour, setSelectedColour] = useState('');
       const [additionStatus, setAdditionStatus] = useState('idle') 
       const [showAlert, setShowAlert] = useState(false) 
+      const productImages = JSON.parse(product.images);
       const modalRef = useRef(null);
       const router = useRouter()
       useEffect(() => { 
@@ -55,7 +56,7 @@ export default function ProductDetailsPopUp({ product, openCall, setOpenCall }) 
                         product: product.title,
                         product_id: product.product_id
                   })
-                  dispatch(addToCart({id: product.product_id, title: product.title, price: product.onSale ? product.salePrice : product.price, qty: quantity, colour: selectedColour}))
+                  dispatch(addToCart({id: product.product_id,image: productImages[0] ,title: product.title, price: product.onSale ? product.salePrice : product.price, qty: quantity, colour: selectedColour}))
                   setShowPop(false)
                   router.replace('/checkout-with-payment')
             }else{
@@ -70,7 +71,7 @@ export default function ProductDetailsPopUp({ product, openCall, setOpenCall }) 
                         product: product.title,
                         product_id: product.product_id
                   })
-                  dispatch(addToCart({id: product.product_id, title:product.title, price: product.onSale === 'true' ? product.salePrice : product.price, qty:quantity, colour: selectedColour }))
+                  dispatch(addToCart({id: product.product_id, image: productImages[0], title:product.title, price: product.onSale === 1 ? product.salePrice : product.price, qty:quantity, colour: selectedColour }))
                   setTimeout(() => setAdditionStatus('added'), 1000)
                   setTimeout(() => setAdditionStatus('idle'), 2000)
                   setQuantity(1)
@@ -97,10 +98,10 @@ export default function ProductDetailsPopUp({ product, openCall, setOpenCall }) 
                         <div className="grid grid-cols-1 lg:grid-cols-2 lg:h-[42em] lg:max-h-[42em] lg:overflow-hidden">
                               <div className="flex flex-col lg:h-[42em]">
                                     <div className="relative h-96 lg:h-[80%] overflow-hidden lg:max-h-[80%] bg-gray-50">
-                                          <Image src={product.images[activeImgIndex]} alt={`${product.title} - view ${activeImgIndex + 1}`} height={500} width={500} className="w-full h-[100%] object-fit object-center" sizes="(max-width: 768px) 100vw, 50vw" priority={activeImgIndex === 0} />
+                                          <Image src={productImages[activeImgIndex]} alt={`${product.title} - view ${activeImgIndex + 1}`} height={500} width={500} className="w-full h-[100%] object-fit object-center" sizes="(max-width: 768px) 100vw, 50vw" priority={activeImgIndex === 0} />
                                     </div>
                                     <div className="flex gap-2 p-4 lg:h-[20%] overflow-x-auto bg-gray-50">
-                                          {product.images.map((image, index) => (
+                                          {productImages.map((image, index) => (
                                                 <button key={index} onClick={() => setActiveImgIndex(index)} className={`relative flex-none w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${activeImgIndex === index ? 'border-black scale-105 shadow-md' : 'border-transparent hover:border-gray-400'}`}>
                                                       <Image src={image} alt={`Thumbnail ${index + 1}`} width={80} height={80} className="object-cover w-full h-full" />
                                                 </button>
@@ -111,8 +112,8 @@ export default function ProductDetailsPopUp({ product, openCall, setOpenCall }) 
                                     <div>
                                           <h1 id="product-modal-title" className="text-xl lg:text-3xl font-bold capitalize">{product.title}</h1>
                                           <div className="lg:mt-3 flex items-center gap-3">
-                                                {product.onSale === 'true' ? (<div className='flex gap-2 items-end'><span className="text-sm mb-[2px] line-through text-gray-500">Rs. {formatPKR(product.price)} PKR</span><span className="text-lg font-bold text-red-600">Rs. {formatPKR(product.salePrice)} PKR</span></div>) : (<span className="text-lg lg:text-2xl font-bold">Rs. {formatPKR(product.price)} PKR</span>)}
-                                                {product.onSale === 'true' && <div className="inline-block px-4 py-1 bg-red-600 text-white text-xs font-bold uppercase rounded-full">Sale</div>}
+                                                {product.onSale === 1 ? (<div className='flex gap-2 items-end'><span className="text-sm mb-[2px] line-through text-gray-500">Rs. {formatPKR(product.price)} PKR</span><span className="text-lg font-bold text-red-600">Rs. {formatPKR(product.salePrice)} PKR</span></div>) : (<span className="text-lg lg:text-2xl font-bold">Rs. {formatPKR(product.price)} PKR</span>)}
+                                                {product.onSale === 1 && <div className="inline-block px-4 py-1 bg-red-600 text-white text-xs font-bold uppercase rounded-full">Sale</div>}
                                           </div>
                                     </div>
                                     <div className={`lg:h-[70%] lg:overflow-auto`}>
@@ -126,7 +127,7 @@ export default function ProductDetailsPopUp({ product, openCall, setOpenCall }) 
                                                 }
                                           </div>
                                           {
-                                                product.colors.map((c,index) => <div onClick={() => {setSelectedColour(c); setShowAlert(false)}} className={`flex items-center border px-2 py-1 rounded-full gap-1 capitalize text-xs cursor-pointer ${selectedColour === c ? 'border-black font-bold' : ''}`} key={index}>
+                                                JSON.parse(product.colors).map((c,index) => <div onClick={() => {setSelectedColour(c); setShowAlert(false)}} className={`flex items-center border px-2 py-1 rounded-full gap-1 capitalize text-xs cursor-pointer ${selectedColour === c ? 'border-black font-bold' : ''}`} key={index}>
                                                       {
                                                             colors.find(a => a.name.toLowerCase() === c.toLowerCase()) ?  <div className={`w-4 h-4 border border-black rounded-full`} style={{backgroundColor: colors.find(a => a.name.toLowerCase() === c.toLowerCase()).hex}}/> : null
                                                       }

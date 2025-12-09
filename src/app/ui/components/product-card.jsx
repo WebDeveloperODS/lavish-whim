@@ -11,9 +11,10 @@ function formatPKR(num) {
 export default function ProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false);
   const [openPop, setOpenPop] = useState(false);
-  const hasHoverImg = product.images[1] !== undefined;
-  const defaultImg = product.images[0];
-  const hoverImg = product.images[1] ?? defaultImg;
+  const allImages = JSON.parse(product.images);
+  const hasHoverImg = allImages[1] !== undefined;
+  const defaultImg = allImages[0];
+  const hoverImg = allImages[1] ?? defaultImg;
 
   return (
     <div className="flex flex-col border rounded-sm shadow-sm overflow-hidden h-full">
@@ -33,7 +34,7 @@ export default function ProductCard({ product }) {
           className="object-cover object-center transition-transform duration-300 hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
-        {product.onSale === 'true' && (
+        {product.onSale && (
           <span className="absolute bottom-4 left-4 bg-neutral-700 text-white text-xs font-extrabold uppercase tracking-wide rounded-xl px-2 py-1">
             Sale
           </span>
@@ -50,7 +51,7 @@ export default function ProductCard({ product }) {
 
         <div className="mt-auto">
           <div className="flex flex-col lg:flex-row items-start lg:items-end gap-1 lg:gap-2">
-            {product.onSale === 'true' ? (
+            {product.onSale ? (
               <>
                 <span className="text-xs lg:text-sm line-through text-gray-500">
                   Rs. {formatPKR(product.price)} PKR

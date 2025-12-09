@@ -1,17 +1,35 @@
 'use client'
-import { PortalMenu } from 'app/lib/portal-menu'
+import { PortalMenu, UserManagementMenu } from 'app/lib/portal-menu'
+import { signOut } from 'auth'
 import { ArrowLeftFromLineIcon } from 'lucide-react'
 import { ArrowRightFromLineIcon } from 'lucide-react'
 import { ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-const SideBar = ({menuCall, setMenuCall}) => {
+const SideBar = ({menuCall, setMenuCall, username}) => {
       const pathname = usePathname()
       const [hoverTitle, setHoverTitle] = useState(-1)
-      
+      const [userDetails, setUserDetails] = useState();
+      useEffect(() => {
+            async function CheckUser(){
+                  const res = await fetch('/api/database/user/get-user',{
+                        method: 'PUT',
+                        body: JSON.stringify({username: username}),
+                  })
+                  const data = await res.json()
+                  // console.log(data);
+                  if(data){
+                        setUserDetails(data);
+                  }
+                  else{
+                        signOut({callbackUrl: '/portal'})
+                  }
+            }
+            CheckUser()
+      },[username])
       return (
             <div className={`h-screen w-auto border-r border-black/50 relative flex flex-col ${menuCall === true ? 'p-4 gap-6' : 'gap-3 items-center'}`}>
                   {
@@ -21,6 +39,24 @@ const SideBar = ({menuCall, setMenuCall}) => {
                   <div className={`flex flex-col gap-1 ${menuCall === false ? 'px-5 w-full': ''}`}>
                         {
                               PortalMenu.map((item, index) => <Link  onMouseLeave={() => setHoverTitle(-1)} onMouseEnter={() => setHoverTitle(index)} key={index} className={`relative flex items-center gap-2 rounded-lg ${menuCall ? 'text-sm' : 'text-lg'} transition-all ease-in-out duration-400 p-2 ${pathname === item.link ? 'bg-gray-300': 'hover:bg-gray-300'}`} href={item.link}>
+                                    <div className={menuCall === false ? 'w-full relative object-cover': 'w-5 h-5'}>
+                                          {item.icon}
+                                    </div>
+                                    {
+                                          !menuCall && hoverTitle === index && <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-black text-white text-xs font-medium px-3 py-2 rounded-md whitespace-nowrap z-50 shadow-lg">
+                                                {item.title}
+                                          </div> 
+                                    } 
+                                    {
+                                          menuCall ? item.title : null
+                                    } 
+                                    {
+                                          menuCall === true && pathname === item.link ? <ChevronRight className='w-auto h-5 absolute right-1' /> : null
+                                    }
+                              </Link>)
+                        }
+                        {
+                              userDetails?.usertype==='super-admin' && UserManagementMenu.map((item, index) => <Link  onMouseLeave={() => setHoverTitle(-1)} onMouseEnter={() => setHoverTitle(index)} key={index} className={`relative flex items-center gap-2 rounded-lg ${menuCall ? 'text-sm' : 'text-lg'} transition-all ease-in-out duration-400 p-2 ${pathname === item.link ? 'bg-gray-300': 'hover:bg-gray-300'}`} href={item.link}>
                                     <div className={menuCall === false ? 'w-full relative object-cover': 'w-5 h-5'}>
                                           {item.icon}
                                     </div>

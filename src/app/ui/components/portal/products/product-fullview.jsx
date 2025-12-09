@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { AiTwotoneDelete } from 'react-icons/ai';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
+import { colors } from 'app/lib/colors';
+import { Oval } from 'react-loader-spinner';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -63,15 +65,15 @@ export default function ProductDetails({ product_id }) {
 
                   if (!response.ok) throw new Error('Failed to fetch product');
                   const data = await response.json();
-                  const normalized = {
-                        ...data,
-                        onSale: data.onSale === true || data.onSale === 'true',
-                        bestSelling: data.bestSelling === true || data.bestSelling === 'true',
-                  };
+                  // const normalized = {
+                  //       ...data,
+                  //       onSale: data.onSale === true || data.onSale === 'true',
+                  //       bestSelling: data.bestSelling === true || data.bestSelling === 'true',
+                  // };
 
-                  setProduct(normalized);
-                  setOriginalProduct(normalized);
-                  setProductColors(normalized.colors || []);
+                  setProduct(data);
+                  setOriginalProduct(data);
+                  setProductColors(JSON.parse(data.colors) || []);
             } catch (err) {
                   setError(err.message);
             } finally {
@@ -90,7 +92,7 @@ export default function ProductDetails({ product_id }) {
 
       const cancelEditing = () => {
             setProduct(originalProduct);
-            setProductColors(originalProduct.colors || []);
+            setProductColors(JSON.parse(originalProduct.colors) || []);
             setEditing(false);
       };
 
@@ -169,17 +171,31 @@ export default function ProductDetails({ product_id }) {
             }
       }
 
-      if (loading) return <div className="p-8 text-center">Loading product...</div>;
+      if (loading) return <div className="w-full h-96 flex flex-col justify-center items-center gap-4">
+                        <Oval 
+                              visible={true}
+                              height="40"
+                              width="40"
+                              color="#D4AF37"
+                              secondaryColor="#F5DEB3"
+                              ariaLabel="oval-loading"
+                              wrapperStyle={{}}
+                              wrapperClass=""
+                              strokeWidth={3}
+                              strokeWidthSecondary={3}
+                        />
+                        <h3 className="text-md uppercase tracking-wide font-bold">Searching product...</h3>
+                  </div>;
       if (error) return <div className="p-8 text-red-600 text-center">{error}</div>;
 
       return (
-      <div className="grid grid-cols-2 gap-6 p-4">
+      <div className="w-full grid grid-cols-2 gap-6 p-4">
             <div className="col-span-full flex flex-col gap-4 bg-gray-100 p-6 rounded-lg">
                   <h3 className="text-xl font-semibold underline decoration-red-700 underline-offset-4">
                         Product Images
                   </h3>
                   <div className="grid grid-cols-7 gap-6">
-                        { product.images.length > 0 ? product.images?.map((img, i) => (
+                        { JSON.parse(product.images).length > 0 ? JSON.parse(product.images)?.map((img, i) => (
                               <div key={i} className="relative w-36 h-36 bg-white rounded-lg overflow-hidden shadow">
                                     <Image src={img} alt={`${product.title} - image ${i + 1}`} fill className="object-cover" />
                                     {editing && (
@@ -207,9 +223,9 @@ export default function ProductDetails({ product_id }) {
                   </h3>
                   <div className="bg-white p-4 rounded-lg">
                         <div className="flex flex-wrap gap-3 mb-4">
-                              {productColors.map((color, i) => (
+                              {productColors?.map((color, i) => (
                               <div key={i} className="flex items-center gap-2 bg-gray-50 border rounded-full px-4 py-2">
-                              <div className="w-6 h-6 rounded-full border-2 border-gray-300" style={{ backgroundColor: color }} />
+                              <div className="w-6 h-6 rounded-full border-2 border-gray-300" style={{ backgroundColor: colors.find(c => c.name.toLowerCase() === color.toLowerCase())?.hex }} />
                                     <span className="capitalize">{color}</span>
                                     {editing && (
                                           <button onClick={() => removeColor(i)} className="text-red-500 hover:text-red-700 ml-2" >
@@ -263,11 +279,11 @@ export default function ProductDetails({ product_id }) {
                   </h3>
                   <div className="flex gap-6">
                         <label className="flex items-center gap-2">
-                              <input type="radio" checked={product.onSale === true} onChange={() => setProduct((p) => ({ ...p, onSale: true }))} disabled={!editing} />
+                              <input type="radio" checked={product.onSale === 1} onChange={() => setProduct((p) => ({ ...p, onSale: 1 }))} disabled={!editing} />
                               Yes
                         </label>
                         <label className="flex items-center gap-2">
-                              <input type="radio" checked={product.onSale === false} onChange={() => setProduct((p) => ({ ...p, onSale: false }))} disabled={!editing} />
+                              <input type="radio" checked={product.onSale === 0} onChange={() => setProduct((p) => ({ ...p, onSale: 0 }))} disabled={!editing} />
                               No
                         </label>
                   </div>
@@ -317,8 +333,8 @@ export default function ProductDetails({ product_id }) {
                   <div className="flex gap-8">
                         {(field === 'bestSelling'
                         ? [
-                              { label: 'Yes', value: true },
-                              { label: 'No', value: false },
+                              { label: 'Yes', value: 1 },
+                              { label: 'No', value: 0 },
                         ]
                         : field === 'status'
                         ? [

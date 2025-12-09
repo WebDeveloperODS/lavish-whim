@@ -4,6 +4,8 @@ import { IoStorefrontOutline } from "react-icons/io5";
 import { TbUsersGroup } from "react-icons/tb";
 import { MdAddShoppingCart } from "react-icons/md";
 import { MdOutlinePersonAddAlt } from "react-icons/md";
+import { RiCoupon3Line } from "react-icons/ri";
+import { FiImage } from "react-icons/fi";
 
 export const PortalMenu = [
       {
@@ -22,14 +24,27 @@ export const PortalMenu = [
             icon: <IoStorefrontOutline className="w-full h-full"/>
       },
       {
-            title: 'Portal Users',
-            link: '/portal/dashboard/portal-users',
-            icon: <TbUsersGroup className="w-full h-full"/>
-      },
-      {
             title: 'Add New Product',
             link: '/portal/dashboard/new-product-addition',
             icon: <MdAddShoppingCart className="w-full h-full"/>
+      },
+      {
+            title: 'Home Popup',
+            link: '/portal/dashboard/home-popup-setup',
+            icon: <FiImage className="w-full h-full"/>
+      },
+      {
+            title: 'Active Coupons',
+            link: '/portal/dashboard/discount-coupons',
+            icon: <RiCoupon3Line className="w-full h-full"/>
+      },
+]
+
+export const UserManagementMenu = [
+      {
+            title: 'Portal Users',
+            link: '/portal/dashboard/portal-users',
+            icon: <TbUsersGroup className="w-full h-full"/>
       },
       {
             title: 'Add New User',

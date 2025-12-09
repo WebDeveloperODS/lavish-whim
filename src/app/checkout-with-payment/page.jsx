@@ -2,7 +2,6 @@
 import SectionHead2 from "app/ui/components/heading-two";
 import { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import products from '/public/content/products.json';
 import Image from "next/image";
 import { PlusCircle, MinusCircle } from "lucide-react";
 import { clearCart, increaseCountInCart, removeAllCountFromCart, removeFromCart } from "store/slices/cartSlice";
@@ -19,8 +18,11 @@ export default function Page(){
       const [customerCart, setCustomerCart] = useState([]);
       const [displayMsg, setDisplayMsg] = useState(false);
       const [discountCoupon, setDiscountCoupon] = useState('');
+      const [couponMsg, setCouponMsg] = useState('');
+      const [couponDetails, setCouponDetails] = useState(null);
       const [paymentOption,setPaymentOption] = useState('Cash on delivery')
-      const [paymentStatus,setPaymentStatus] = useState('waiting')
+      const [total, setTotal] = useState(0)
+      // const [paymentStatus,setPaymentStatus] = useState('waiting')
       const [customer, setCustomer] = useState({
             fullname: '',
             contact: '',
@@ -34,27 +36,9 @@ export default function Page(){
             country: '',
             zipCode: '' 
       })
+      
       useEffect(() => {
-            if (cartItems.length > 0) {
-                  const details = cartItems.map((item) => {
-                  const product = products.find((p) => p.product_id === item.id);
-                  if (!product) return null;
-
-                  return {
-                        ...item,
-                        title: product.title,
-                        image: product.images[0],
-                        price: product.price,
-                        colour: item.colour,
-                        discountedPrice: product.onSale === "true" ? product.salePrice : null,
-                        discounted: product.onSale === "true"
-                  };
-                  }).filter(Boolean);
-
-                  setCustomerCart(details);
-            } else {
-                  setCustomerCart([]);
-            }
+            setCustomerCart(cartItems);
       }, [cartItems]);
 
       const subTotal = useMemo(() => {
@@ -69,7 +53,15 @@ export default function Page(){
             }, 0);
       }, [customerCart]);
 
-      const total = subTotal - discountTotal;
+      useEffect(() => {
+            if(discountTotal && subTotal){
+                  setTotal(subTotal-discountTotal)
+            }
+            if(couponDetails){
+                  const toCut = (subTotal/100) * couponDetails?.discount_percentage;
+                  setTotal(subTotal - discountTotal - toCut)
+            }
+      },[discountTotal, subTotal, couponDetails])
 
       const validateOrder = async (e) => {
             e.preventDefault()
@@ -88,9 +80,11 @@ export default function Page(){
                   payment: {
                         subTotal: String(subTotal),
                         discountTotal: String(discountTotal),
+                        coupon: couponDetails.coupon_code ?? "",
+                        couponDisc: String((subTotal/100)*couponDetails.discount_percentage) ?? '',
                         total: String(total),
                         paymentThru: paymentOption,
-                        paymentStatus: paymentStatus
+                        paymentStatus: 'waiting'
                   },
                   customer: customer,
                   address: address
@@ -109,6 +103,20 @@ export default function Page(){
             }
             
       };
+
+      const detectCoupon = async() => {
+            const resp = await fetch('/api/database/disc-coupons/check-coupon-code',{
+                  method: 'PUT',
+                  body: JSON.stringify({coupon_code: discountCoupon})
+            })
+            if(resp.ok){
+                  setCouponMsg('fine');
+                  const data = await resp.json()
+                  setCouponDetails(data);
+            } else {
+                  setCouponMsg('not-fine')
+            }
+      }
 
       useEffect(() => {
             if(displayMsg === true){
@@ -165,12 +173,12 @@ export default function Page(){
                                                             <h3>Qty:</h3>
                                                             <MinusCircle
                                                                   className="w-4 h-4 cursor-pointer"
-                                                                  onClick={() => dispatch(removeFromCart({ id: item.id }))}
+                                                                  onClick={() => dispatch(removeFromCart({ id: item.id, colour: item.colour }))}
                                                             />
                                                             <h3>{item.qty}</h3>
                                                             <PlusCircle
                                                                   className="w-4 h-4 cursor-pointer"
-                                                                  onClick={() => dispatch(increaseCountInCart({ id: item.id }))}
+                                                                  onClick={() => dispatch(increaseCountInCart({ id: item.id, colour: item.colour }))}
                                                             />
                                                       </div>
                                                 </div>
@@ -194,7 +202,7 @@ export default function Page(){
                                                       </div>
 
                                                       <button
-                                                            onClick={() => dispatch(removeAllCountFromCart({ id: item.id }))}
+                                                            onClick={() => dispatch(removeAllCountFromCart({ id: item.id, colour: item.colour }))}
                                                             className="text-red-600 text-sm underline"
                                                       >
                                                             {
@@ -212,9 +220,9 @@ export default function Page(){
                         <div className="lg:border-l lg:pl-6 ">
                               <div className="flex flex-col gap-3 text-sm">
                                     <h2 className="font-bold text-lg xl:text-xl">Coupon Code</h2>
-                                    <div className="grid grid-cols-[90%_10%] border-2 border-black rounded-lg">
-                                          <input className="rounded-lg p-2" placeholder="Coupon..." name="discountCoupon" id="discountCoupon" value={discountCoupon} onChange={(e) => setDiscountCoupon(e.target.value)}/> 
-                                          <CheckCircle2 className="mx-auto my-auto"/>
+                                    <div className={`grid grid-cols-[90%_10%] border-2 rounded-lg ${couponMsg === 'fine' ? 'text-green-600 border-green-600' : ' border-black'}`}>
+                                          <input className="rounded-lg active:border-tranparent p-2 uppercase" placeholder="Coupon..." name="discountCoupon" id="discountCoupon" value={discountCoupon} onChange={(e) => setDiscountCoupon(e.target.value.toUpperCase(  ))}/> 
+                                          <CheckCircle2 onClick={() => detectCoupon()} className="mx-auto my-auto cursor-pointer"/>
                                     </div>
                                     <h2 className="font-bold text-lg xl:text-xl">Order Summary</h2>
                                     <div className="flex justify-between">
@@ -226,15 +234,14 @@ export default function Page(){
                                           <span>Shipping</span>
                                           <span>Free</span>
                                     </div>
-                                    
-                                    <div className="flex justify-between">
-                                          <span>Coupon</span>
-                                          <span>Free</span>
-                                    </div>
 
                                     <div className="flex justify-between text-green-600">
-                                          <span>Discount</span>
+                                          <span>General Discount</span>
                                           <span>- Rs. {discountTotal.toLocaleString("en-PK")}</span>
+                                    </div>
+                                    <div className={`flex justify-between ${couponDetails ? 'text-green-600':''}`}>
+                                          <span>Discount By Coupon</span>
+                                          <span>{couponDetails?<>- Rs. {((subTotal/100) * couponDetails.discount_percentage).toLocaleString('en-PK')} </>: '---'}</span>
                                     </div>
 
                                     <hr className="my-2" />

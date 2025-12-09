@@ -73,7 +73,6 @@ const SlideShow = () => {
             onTouchStart={() => setBlockLoop(true)}
             onTouchEnd={() => setBlockLoop(false)}
             priority={true}
-            sizes=""
             className="w-full h-full object-cover object-center"
           />
         </div>

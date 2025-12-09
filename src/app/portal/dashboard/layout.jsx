@@ -1,27 +1,18 @@
-'use client';
+import { auth } from "auth";
+import ChildLayout from "./child-layout";
+import { redirect } from "next/navigation";
 
-import PortalHeader from "app/ui/components/portal/header";
-import SideBar from "app/ui/components/portal/side-bar";
-import { useState } from "react";
+export default async function Layout({ children }) {
+  const session = await auth();
+  const name = session?.user?.name || "null";
 
-export default function Layout({ children }) {
-  const [openMenu, setOpenMenu] = useState(true);
-
-  const gridCols = openMenu
-    ? "2xl:grid-cols-[16%_84%]"
-    : "2xl:grid-cols-[5em_calc(100vw-5em)]";
+  if(name === "null"){
+    redirect('/portal')
+  }
 
   return (
-    <div className={`grid ${gridCols} w-full h-screen`}>
-      <SideBar menuCall={openMenu} setMenuCall={setOpenMenu} />
-
-      <div className="w-full relative overflow-x-hidden h-screen">
-        <PortalHeader />
-        <div className="container p-6">
-          {children}
-        </div>
-      </div>
-    </div>
-
+    <ChildLayout name={name}>
+      {children}
+    </ChildLayout>
   );
 }
